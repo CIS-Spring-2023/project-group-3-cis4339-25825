@@ -39,6 +39,11 @@ const routes = [
     name: 'eventdetails',
     props: true,
     component: () => import('../components/eventDetails.vue')
+  },
+  {
+    path: '/findclient',
+    name: 'findclient',
+    component: () => import('../components/findClient.vue')
   }
 ]
 const router = createRouter({

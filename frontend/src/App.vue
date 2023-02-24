@@ -75,6 +75,17 @@ export default {
                 Find Event
               </router-link>
             </li>
+            <li>
+              <!-- added a new list item with the page for services-->
+              <router-link to="/findservice">
+                <span
+                  style="position: relative; top: 6px"
+                  class="material-icons"
+                  >search</span
+                >
+                Find Service
+              </router-link>
+            </li>
           </ul>
         </nav>
       </header>
