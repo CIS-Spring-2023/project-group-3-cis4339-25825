@@ -9,10 +9,9 @@ export default {
     return {
       queryData: [],
       // Parameter for search to occur
+      // removed unecessary parameters
       searchBy: '',
-      firstName: '',
-      lastName: '',
-      phoneNumber: ''
+      servicetName: ''
     }
   },
   created() {
