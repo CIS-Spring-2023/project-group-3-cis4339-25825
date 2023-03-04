@@ -43,7 +43,7 @@ const routes = [
   {
     path: '/findservice',
     name: 'findservice',
-    component: () => import('../components/findservice.vue')
+    component: () => import('../components/findService.vue')
   }
 ]
 const router = createRouter({

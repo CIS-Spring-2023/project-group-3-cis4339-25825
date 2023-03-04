@@ -77,7 +77,7 @@ export default {
             </li>
             <li>
               <!-- added a new list item with the page for services-->
-              <router-link to="/findservice">
+              <router-link to="/findervice">
                 <span
                   style="position: relative; top: 6px"
                   class="material-icons"
