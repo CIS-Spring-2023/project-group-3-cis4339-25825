@@ -56,6 +56,17 @@ export default {
               </router-link>
             </li>
             <li>
+              <!-- added a new list item with the search page for services-->
+              <router-link to="/services"> 
+                <span
+                  style="position: relative; top: 6px"
+                  class="material-icons"
+                  >check</span
+                >
+                Services
+              </router-link>
+            </li>
+            <li>
               <router-link to="/findclient">
                 <span
                   style="position: relative; top: 6px"
@@ -73,17 +84,6 @@ export default {
                   >search</span
                 >
                 Find Event
-              </router-link>
-            </li>
-            <li>
-              <!-- added a new list item with the page for services-->
-              <router-link to="/findervice">
-                <span
-                  style="position: relative; top: 6px"
-                  class="material-icons"
-                  >search</span
-                >
-                Find Service
               </router-link>
             </li>
           </ul>

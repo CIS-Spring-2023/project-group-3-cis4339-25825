@@ -41,10 +41,15 @@ const routes = [
     component: () => import('../components/eventDetails.vue')
   },
   {
-    path: '/findservice',
-    name: 'findservice',
-    component: () => import('../components/findService.vue')
-  }
+    path: '/services', // added path for the services page
+    name: 'services',
+    component: () => import('../components/services.vue') // component path
+  },
+  {
+    path: '/serviceForm', // added path for the add services page
+    name: 'serviceform',
+    component: () => import('../components/serviceForm.vue') // component path
+  },
 ]
 const router = createRouter({
   history: createWebHistory(),
