@@ -50,6 +50,11 @@ const routes = [
     name: 'serviceform',
     component: () => import('../components/serviceForm.vue') // component path
   },
+  {
+    path: '/serviceDetails', // added path for the service details page
+    name: 'serviceDetails',
+    component: () => import('../components/serviceDetails.vue') // component path
+  }
 ]
 const router = createRouter({
   history: createWebHistory(),
