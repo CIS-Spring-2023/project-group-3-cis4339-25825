@@ -51,9 +51,9 @@ const routes = [
     component: () => import('../components/serviceForm.vue') // component path
   },
   {
-    path: '/serviceDetails', // added path for the service details page
-    name: 'serviceDetails',
-    component: () => import('../components/serviceDetails.vue') // component path
+    path: '/updateService/:id', // added path for the update service page
+    name: 'updateservice',
+    component: () => import('../components/updateService.vue') // component path
   }
 ]
 const router = createRouter({
