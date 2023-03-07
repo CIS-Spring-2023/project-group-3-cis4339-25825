@@ -23,9 +23,31 @@ export default {
           zip: ''
         },
         description: ''
-      }
-    }
-  },
+      },
+      services:[
+                {
+                    id: '1',
+                    name: 'Family Support',
+                    activeStatus: true,
+                },
+                {
+                    id: '2',
+                    name:'Youth Services Program',
+                    activeStatus: true,
+                },
+                {
+                    id: '3',
+                    name:'Early Childhood Education',
+                    activeStatus: true,
+                },
+                {
+                    id: '4',
+                    name:'Adult Education',
+                    activeStatus: true,
+                }
+            ]
+            }
+        },
   methods: {
     async handleSubmitForm() {
       // Checks to see if there are any errors in validation
@@ -135,59 +157,15 @@ export default {
           <div></div>
           <!-- form field -->
           <div class="flex flex-col grid-cols-3">
-            <label>Services Offered at Event</label> <!--This section will need to be dynamically populated by available services-->
-            <div>
-              <label for="familySupport" class="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  id="familySupport"
-                  value="Family Support"
-                  v-model="event.services"
-                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-                  notchecked
-                />
-                <span class="ml-2">Family Support</span>
-              </label>
-            </div>
-            <div>
-              <label for="adultEducation" class="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  id="adultEducation"
-                  value="Adult Education"
-                  v-model="event.services"
-                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-                  notchecked
-                />
-                <span class="ml-2">Adult Education</span>
-              </label>
-            </div>
-            <div>
-              <label for="youthServices" class="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  id="youthServices"
-                  value="Youth Services Program"
-                  v-model="event.services"
-                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-                  notchecked
-                />
-                <span class="ml-2">Youth Services Program</span>
-              </label>
-            </div>
-            <div>
-              <label for="childhoodEducation" class="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  id="childhoodEducation"
-                  value="Early Childhood Education"
-                  v-model="event.services"
-                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-                  notchecked
-                />
-                <span class="ml-2">Early Childhood Education</span>
-              </label>
-            </div>
+            <label>Services Offered at Event</label> <!--Testing theory about how to populate these from a dataset. Current is local, need to make avail to services page-->
+            <div v-for="service in services" > <!--list each item in service array-->
+              <p v-if="service.activeStatus == true" > <!-- but only if true-->
+              <input :id="service.name" type="checkbox" v-model="event.services" :value="service.name"
+              class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
+              notchecked/>  <!-- checkbox that sends data to services information in Event instance-->
+              <label :for="service.name">{{service.name}}</label> <!--label for each checkbox-->
+              </p>
+          </div>
           </div>
         </div>
 
@@ -258,6 +236,7 @@ export default {
             </label>
           </div>
         </div>
+
 
         <div class="flex justify-between mt-10 mr-20">
           <button class="bg-red-700 text-white rounded" type="submit">
