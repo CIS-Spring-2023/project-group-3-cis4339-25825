@@ -83,7 +83,7 @@ export default {
       <h1
         class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10"
       >
-        Update Event
+        Update Service
       </h1>
     </div>
     <div class="px-10 py-20">
@@ -91,21 +91,21 @@ export default {
         <div
           class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
         >
-          <h2 class="text-2xl font-bold">Event Details</h2>
+          <h2 class="text-2xl font-bold">Services Offered</h2>
           <!-- form field -->
           <div class="flex flex-col">
             <label class="block">
-              <span class="text-gray-700">Event Name</span>
+              <span class="text-gray-700">Service Name</span>
               <span style="color: #ff0000">*</span>
               <input
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="event.name"
+                v-model="service.name"
               />
-              <span class="text-black" v-if="v$.event.name.$error">
+              <span class="text-black" v-if="v$.service.name.$error">
                 <p
                   class="text-red-700"
-                  v-for="error of v$.event.name.$errors"
+                  v-for="error of v$.service.name.$errors"
                   :key="error.$uid"
                 >
                   {{ error.$message }}!
@@ -114,47 +114,9 @@ export default {
             </label>
           </div>
 
-          <!-- form field -->
-          <div class="flex flex-col">
-            <label class="block">
-              <span class="text-gray-700">Date</span>
-              <span style="color: #ff0000">*</span>
-              <input
-                type="date"
-                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="event.date"
-              />
-              <span class="text-black" v-if="v$.event.date.$error">
-                <p
-                  class="text-red-700"
-                  v-for="error of v$.event.date.$errors"
-                  :key="error.$uid"
-                >
-                  {{ error.$message }}!
-                </p>
-              </span>
-            </label>
-          </div>
 
-          <div></div>
-          <div></div>
           <!-- form field -->
-          <div class="flex flex-col">
-            <label class="block">
-              <span class="text-gray-700">Description</span>
-              <!-- added missing v-model connection -->
-              <textarea
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                rows="2"
-                v-model="event.description"
-              ></textarea>
-            </label>
-          </div>
-
-          <div></div>
-          <div></div>
-          <div></div>
-          <!-- form field -->
+          <!-- Still figuring out how to display services added -->
           <div class="flex flex-col grid-cols-3">
             <label>Services Offered at Event</label>
             <div>
@@ -212,94 +174,29 @@ export default {
           </div>
         </div>
 
-        <!-- grid container -->
-        <div
-          class="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
-        >
-          <h2 class="text-2xl font-bold">Address</h2>
-          <!-- form field -->
-          <div class="flex flex-col">
-            <label class="block">
-              <span class="text-gray-700">Address Line 1</span>
-              <input
-                type="text"
-                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                placeholder
-                v-model="event.address.line1"
-              />
-            </label>
-          </div>
-          <!-- form field -->
-          <div class="flex flex-col">
-            <label class="block">
-              <span class="text-gray-700">Address Line 2</span>
-              <input
-                type="text"
-                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                placeholder
-                v-model="event.address.line2"
-              />
-            </label>
-          </div>
-          <!-- form field -->
-          <div class="flex flex-col">
-            <label class="block">
-              <span class="text-gray-700">City</span>
-              <input
-                type="text"
-                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                placeholder
-                v-model="event.address.city"
-              />
-            </label>
-          </div>
-          <div></div>
-          <!-- form field -->
-          <div class="flex flex-col">
-            <label class="block">
-              <span class="text-gray-700">County</span>
-              <input
-                type="text"
-                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                placeholder
-                v-model="event.address.county"
-              />
-            </label>
-          </div>
-          <!-- form field -->
-          <div class="flex flex-col">
-            <label class="block">
-              <span class="text-gray-700">Zip Code</span>
-              <input
-                type="text"
-                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                placeholder
-                v-model="event.address.zip"
-              />
-            </label>
-          </div>
-        </div>
+
 
         <!-- grid container -->
+        <!-- Service update and delete -->
         <div
           class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
         >
           <div class="flex justify-between mt-10 mr-20">
             <button
-              @click="handleEventUpdate"
+              @click="handleServiceUpdate"
               type="submit"
               class="bg-green-700 text-white rounded"
             >
-              Update Event
+              Update Service
             </button>
           </div>
           <div class="flex justify-between mt-10 mr-20">
             <button
-              @click="eventDelete"
+              @click="serviceDelete"
               type="submit"
               class="bg-red-700 text-white rounded"
             >
-              Delete Event
+              Delete Service
             </button>
           </div>
           <div class="flex justify-between mt-10 mr-20">
