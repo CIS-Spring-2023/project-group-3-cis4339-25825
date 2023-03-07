@@ -10,7 +10,6 @@ export default {
   },
   data() {
     return {
-      // removed unnecessary extra array to track services
       event: {
         name: '',
         services: [],
@@ -24,24 +23,20 @@ export default {
         },
         description: ''
       },
-      services:[
+      services:[ //array of services with active status to test checkbox functionality
                 {
-                    id: '1',
                     name: 'Family Support',
                     activeStatus: true,
                 },
                 {
-                    id: '2',
                     name:'Youth Services Program',
                     activeStatus: true,
                 },
                 {
-                    id: '3',
                     name:'Early Childhood Education',
                     activeStatus: true,
                 },
                 {
-                    id: '4',
                     name:'Adult Education',
                     activeStatus: true,
                 }
