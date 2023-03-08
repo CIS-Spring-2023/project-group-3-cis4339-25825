@@ -73,6 +73,10 @@ export default {
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 v-model="service.name"
               />
+              <label class="block">
+              <span class="text-gray-700">Active Service Status?  </span>
+              <input type="checkbox" id="status" v-model="service.status">
+              </label>
               <span class="text-black" v-if="v$.service.name.$error">
                 <p
                   class="text-red-700"
@@ -87,21 +91,28 @@ export default {
 
           <!-- form field -->
           <div class="flex flex-col">
-            <label class="block">
-              <span class="text-gray-700">Active Service Status?  </span>
-              <input type="checkbox" id="status" v-model="service.status">
-            </label>
+
           </div>
 
           <div></div>
           <div></div>
           <div></div>
+          <div class="flex justify-between mt-10 mr-20">
+            <button
+              type="reset"
+              class="border border-red-700 bg-white text-red-700 rounded"
+              @click="$router.back()"
+            >
+              Go back
+            </button>
+          </div>
         <div class="flex justify-between mt-10 mr-20">
           <button class="bg-red-700 text-white rounded" type="submit">
             Add New Service
           </button>
         </div>
         </div>
+        
       </form>
     </div>
   </main>
