@@ -12,21 +12,7 @@ export default {
   },
   data() {
     return {
-      clientAttendees: [],
-      event: {
-        name: '',
-        services: [],
-        date: '',
-        address: {
-          line1: '',
-          line2: '',
-          city: '',
-          county: '',
-          zip: ''
-        },
-        description: '',
-        attendees: []
-      }
+      services: []
     }
   },
   created() {
