@@ -1,66 +1,34 @@
 <script>
-import useVuelidate from '@vuelidate/core'
-import { required } from '@vuelidate/validators'
-import axios from 'axios'
-import { DateTime } from 'luxon'
-const apiURL = import.meta.env.VITE_ROOT_API
-
+import ServiceData from '../assets/ServiceData.json'
 export default {
-  props: ['id'],
-  setup() {
-    return { v$: useVuelidate({ $autoDirty: true }) }
-  },
-  data() {
-    return {
-      services: []
-    }
+  data() {return {
+    queryData: [],
+      // Parameter for search to occur
+      searchBy: '',
+      service: { // service object
+        name: '',
+        status: '',
+        description: '',
   },
   created() {
-    axios.get(`${apiURL}/events/id/${this.$route.params.id}`).then((res) => {
-      this.event = res.data
-      this.event.date = this.formattedDate(this.event.date)
-      this.event.attendees.forEach((e) => {
-        axios.get(`${apiURL}/clients/id/${e}`).then((res) => {
-          this.clientAttendees.push(res.data)
-        })
-      })
-    })
+    this.getServices() // get all services on page load
   },
   methods: {
-    // better formatted date, converts UTC to local time
-    formattedDate(datetimeDB) {
-      const dt = DateTime.fromISO(datetimeDB, {
-        zone: 'utc'
-      })
-      return dt
-        .setZone(DateTime.now().zoneName, { keepLocalTime: true })
-        .toISODate()
+    getServices() {
+      this.queryData = ServiceData.currentServices // set queryData to service data
     },
-    handleEventUpdate() {
-      axios.put(`${apiURL}/events/update/${this.id}`, this.event).then(() => {
+    handleSubmitForm() {
         alert('Update has been saved.')
-        this.$router.back()
-      })
-    },
-    editClient(clientID) {
-      this.$router.push({ name: 'updateclient', params: { id: clientID } })
+      },
+    editService(serviceId) {
+      alert('Service has been updated.')
     },
     eventDelete() {
-      axios.delete(`${apiURL}/events/${this.id}`).then(() => {
         alert('Event has been deleted.')
-        this.$router.push({ name: 'findevents' })
-      })
-    }
-  },
-  // sets validations for the various data properties
-  validations() {
-    return {
-      event: {
-        name: { required },
-        date: { required }
       }
-    }
+    },
   }
+}
 }
 </script>
 <template>
@@ -78,6 +46,7 @@ export default {
           class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
         >
           <h2 class="text-2xl font-bold">Services Offered</h2>
+        </div>
           <!-- form field -->
           <div class="flex flex-col">
             <label class="block">
@@ -88,78 +57,19 @@ export default {
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 v-model="service.name"
               />
-              <span class="text-black" v-if="v$.service.name.$error">
-                <p
-                  class="text-red-700"
-                  v-for="error of v$.service.name.$errors"
-                  :key="error.$uid"
-                >
-                  {{ error.$message }}!
-                </p>
-              </span>
             </label>
           </div>
 
 
           <!-- form field -->
           <!-- Still figuring out how to display services added -->
-          <div class="flex flex-col grid-cols-3">
-            <label>Services Offered at Event</label>
-            <div>
-              <label for="familySupport" class="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  id="familySupport"
-                  value="Family Support"
-                  v-model="event.services"
-                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-                  notchecked
-                />
-                <span class="ml-2">Family Support</span>
+          <!-- form field -->
+          <div class="flex flex-col">
+            <label class="block">
+              <span class="text-gray-700">Active Service Status?  </span>
+              <input type="checkbox" id="serviceStatus" v-model="service.status">
               </label>
-            </div>
-            <div>
-              <label for="adultEducation" class="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  id="adultEducation"
-                  value="Adult Education"
-                  v-model="event.services"
-                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-                  notchecked
-                />
-                <span class="ml-2">Adult Education</span>
-              </label>
-            </div>
-            <div>
-              <label for="youthServices" class="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  id="youthServices"
-                  value="Youth Services Program"
-                  v-model="event.services"
-                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-                  notchecked
-                />
-                <span class="ml-2">Youth Services Program</span>
-              </label>
-            </div>
-            <div>
-              <label for="childhoodEducation" class="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  id="childhoodEducation"
-                  value="Early Childhood Education"
-                  v-model="event.services"
-                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-                  notchecked
-                />
-                <span class="ml-2">Early Childhood Education</span>
-              </label>
-            </div>
           </div>
-        </div>
-
 
 
         <!-- grid container -->
@@ -195,7 +105,7 @@ export default {
             </button>
           </div>
         </div>
-
+      </form>
         <hr class="mt-10 mb-10" />
 
         <!-- grid container -->
@@ -208,29 +118,34 @@ export default {
             <h3 class="italic">Click table row to edit/display an entry</h3>
           </div>
           <div class="flex flex-col col-span-2">
-            <table class="min-w-full shadow-md rounded">
-              <thead class="bg-gray-50 text-xl">
-                <tr>
-                  <th class="p-4 text-left">Service</th>
-                  <th class="p-4 text-left">Service Status</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-300">
-                <tr
-                  @click="editService(service._id)"
-                  v-for="service in queryData"
-                  :key="service._id"
-                >
-                  <td class="p-2 text-left">
-                    {{ service.name }}
-                  </td>
-                  <td class="p-2 text-left">{{ service.status }} }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </form>
+        <table class="min-w-full shadow-md rounded">
+          <thead class="bg-gray-50 text-xl">
+            <tr>
+              <th class="p-4 text-left">Service Name</th>
+              <th class="p-4 text-left">Status</th>
+              <th class="p-4 text-left">Description</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-300">
+            <tr
+              @click="editService(service.id)"
+              v-for="service in queryData"
+              :key="service.id"
+            >
+              <td class="p-2 text-left">
+                {{ service.name}} <!-- display service name -->
+              </td>
+              <td class="p-2 text-left">
+                {{ service.status==1 ? 'Inactive' : 'Active'}} <!-- ternary operator to display status -->
+              </td>
+              <td class="p-2 text-left">
+                {{ service.description}} <!-- display service description -->
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
   </main>
 </template>

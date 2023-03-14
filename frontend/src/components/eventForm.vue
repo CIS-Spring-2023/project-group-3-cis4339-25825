@@ -22,28 +22,10 @@ export default {
           zip: ''
         },
         description: ''
-      },
-      services:[ //array of services with active status to test checkbox functionality
-                {
-                    name: 'Family Support',
-                    activeStatus: true,
-                },
-                {
-                    name:'Youth Services Program',
-                    activeStatus: true,
-                },
-                {
-                    name:'Early Childhood Education',
-                    activeStatus: true,
-                },
-                {
-                    name:'Adult Education',
-                    activeStatus: true,
-                }
-            ]
-            }
-        },
-  methods: {
+      }
+    }
+  },      
+    methods: {
     async handleSubmitForm() {
       // Checks to see if there are any errors in validation
       const isFormCorrect = await this.v$.$validate()

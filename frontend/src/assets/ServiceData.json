@@ -1,0 +1,28 @@
+{
+    "currentServices": [
+        {
+            "id": 1,
+            "name": "Family Support",
+            "activeStatus": true,
+            "description": "A program that provides support to families" 
+        },
+        {
+            "id": 2,
+            "name":"Youth Services Program",
+            "activeStatus": true,
+            "description": "A program that provides support to youth"
+        },
+        {
+            "id": 3,
+            "name":"Early Childhood Education",
+            "activeStatus": true,
+            "description": "A program that provides support to children"
+        },
+        {
+            "id": 4,
+            "name":"Adult Education",
+            "activeStatus": true,
+            "description": "A program that provides support to adults"
+        }
+    ]
+}

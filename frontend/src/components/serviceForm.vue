@@ -18,20 +18,9 @@ export default {
     }
   },
   methods: {
-    async handleSubmitForm() {
-      // Checks to see if there are any errors in validation
-      const isFormCorrect = await this.v$.$validate()
-      // If no errors found. isFormCorrect = True then the form is submitted
+    handleSubmitForm() {
       if (isFormCorrect) {
-        axios
-          .post(`${apiURL}/services`, this.service)
-          .then(() => {
-            alert('Service has been added.')
-            this.$router.push({ name: 'services' })
-          })
-          .catch((error) => {
-            console.log(error)
-          })
+          alert('Service has been added.')
       }
     }
   },

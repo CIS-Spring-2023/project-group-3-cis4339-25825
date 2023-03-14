@@ -1,8 +1,7 @@
 <!--FIXME - This is a work in progress | Must resolve references to other pages -->
 
 <script>
-import axios from 'axios' // import axios to make API calls
-const apiURL = import.meta.env.VITE_ROOT_API 
+import ServiceData from '../assets/ServiceData.json' // import service data
 
 export default { // export default to allow other pages to import this page
   data() { 
@@ -12,6 +11,7 @@ export default { // export default to allow other pages to import this page
       searchBy: '',
       servicetName: '',
       serviceStatus: '',
+      serviceDescription: '',
     }
   },
   created() {
@@ -19,28 +19,22 @@ export default { // export default to allow other pages to import this page
   },
   methods: {
     handleSubmitForm() { 
-      let endpoint = ''
       if (this.searchBy === 'Service Name') { // if search by service name
-        endpoint = `services/search/?serviceName=${this.serviceName}&searchBy=name` // search by service name and set endpoint
+        this.$router.push({ name: 'updateservice'}) // search by service name
       }
       else if (this.searchBy === 'Service Status') { // if search by service status
-        endpoint = `services/search/?serviceStatus=${this.serviceStatus}&searchBy=status` // search by service status and set endpoint
+        this.$router.push({ name: 'updateservice' }) // search by service status
       }
-      axios.get(`${apiURL}/${endpoint}`).then((res) => { // make API call
-        this.queryData = res.data
-      })
     },
     // abstract get services call
     getServices() {
-      axios.get(`${apiURL}/services`).then((res) => {
-        this.queryData = res.data // set queryData to response data
-      })
-      window.scrollTo(0, 0) // scroll to top of page
+      this.queryData = ServiceData.currentServices // set queryData to service data
     },
     clearSearch() {
       // Resets all the variables
       this.searchBy = ''
-      this.serviceNumber = ''
+      this.serviceName = ''
+      this.serviceStatus = ''
 
 
       // get all entries
@@ -65,12 +59,15 @@ export default { // export default to allow other pages to import this page
       </h1>
       <div>
       <br>
+      <div class="px-10 pt-20">
+      <h2 class="text-2xl font-bold">Add a New Service</h2>
       <div class="text-center">
       <button class="bg-red-700 text-white rounded"
             @click="addService"
             type="submit"> 
             Add New Service 
       </button>
+      </div>
       </div>
       </div>
     </div>
@@ -94,7 +91,7 @@ export default { // export default to allow other pages to import this page
             <input
               type="text"
               class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              v-model="firstName"
+              v-model="serviceName"
               v-on:keyup.enter="handleSubmitForm"
               placeholder="Enter service name"
             />
@@ -148,20 +145,24 @@ export default { // export default to allow other pages to import this page
           <thead class="bg-gray-50 text-xl">
             <tr>
               <th class="p-4 text-left">Service Name</th>
-              <th class="p-4 text-left">Service Status</th>
+              <th class="p-4 text-left">Status</th>
+              <th class="p-4 text-left">Description</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-300">
             <tr
-              @click="editService(service._id)"
+              @click="editService(service.id)"
               v-for="service in queryData"
-              :key="service._id"
+              :key="service.id"
             >
               <td class="p-2 text-left">
-                {{ service.name}}
+                {{ service.name}} <!-- display service name -->
               </td>
               <td class="p-2 text-left">
-                {{ service.status}} }}
+                {{ service.status==1 ? 'Inactive' : 'Active'}} <!-- ternary operator to display status -->
+              </td>
+              <td class="p-2 text-left">
+                {{ service.description}} <!-- display service description -->
               </td>
             </tr>
           </tbody>
