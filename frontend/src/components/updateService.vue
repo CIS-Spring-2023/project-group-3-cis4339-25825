@@ -65,10 +65,11 @@ export default {
           <!-- Still figuring out how to display services added -->
           <!-- form field -->
           <div class="flex flex-col">
-            <label class="block">
+              <label class="block">
               <span class="text-gray-700">Active Service Status?  </span>
-              <input type="checkbox" id="serviceStatus" v-model="service.status">
+              <input type="checkbox" id="status" v-model="service.status">
               </label>
+
           </div>
 
 

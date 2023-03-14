@@ -53,7 +53,7 @@ export default {
           <h2 class="text-2xl font-bold">Service Details</h2>
 
           <!-- form field -->
-          <div class="flex flex-col">
+          <div class="flex flex-col w-50">
             <label class="block">
               <span class="text-gray-700">Service Name</span>
               <span style="color: #ff0000">*</span>
@@ -61,6 +61,17 @@ export default {
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 v-model="service.name"
+              />
+            </label>
+            </div>
+              <div class="flex flex-col w-50">
+            <label class="block">
+              <span class="text-gray-700">Service Description</span>
+              <span style="color: #ff0000">*</span>
+              <input
+                type="text"
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                v-model="service.description"
               />
               <label class="block">
               <span class="text-gray-700">Active Service Status?  </span>
@@ -83,8 +94,6 @@ export default {
 
           </div>
 
-          <div></div>
-          <div></div>
           <div></div>
           <div class="flex justify-between mt-10 mr-20">
             <button

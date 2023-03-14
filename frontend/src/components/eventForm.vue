@@ -2,6 +2,7 @@
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import axios from 'axios'
+import ServiceData from '../assets/ServiceData.json' // import service data
 const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
@@ -10,6 +11,7 @@ export default {
   },
   data() {
     return {
+      servicesAvail: [],
       event: {
         name: '',
         services: [],
@@ -24,6 +26,9 @@ export default {
         description: ''
       }
     }
+  },
+  created() {
+    this.getServices() // get all services on page load
   },      
     methods: {
     async handleSubmitForm() {
@@ -41,7 +46,10 @@ export default {
             console.log(error)
           })
       }
-    }
+    },
+    getServices() {
+      this.servicesAvail = ServiceData.currentServices // set queryData to service data
+    },      
   },
   // sets validations for the various data properties
   validations() {
@@ -135,7 +143,7 @@ export default {
           <!-- form field -->
           <div class="flex flex-col grid-cols-3">
             <label>Services Offered at Event</label> <!--Testing theory about how to populate these from a dataset. Current is local, need to make avail to services page-->
-            <div v-for="service in services" > <!--list each item in service array-->
+            <div v-for="service in servicesAvail" > <!--list each item in service array-->
               <p v-if="service.activeStatus == true" > <!-- but only if true-->
               <input :id="service.name" type="checkbox" v-model="event.services" :value="service.name"
               class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"

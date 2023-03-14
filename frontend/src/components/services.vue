@@ -58,7 +58,6 @@ export default { // export default to allow other pages to import this page
         Services
       </h1>
       <div>
-      <br>
       <div class="px-10 pt-20">
       <h2 class="text-2xl font-bold">Add a New Service</h2>
       <div class="text-center">
