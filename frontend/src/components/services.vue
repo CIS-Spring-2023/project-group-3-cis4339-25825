@@ -1,5 +1,3 @@
-<!--FIXME - This is a work in progress | Must resolve references to other pages -->
-
 <script>
 import ServiceData from '../assets/ServiceData.json' // import service data
 

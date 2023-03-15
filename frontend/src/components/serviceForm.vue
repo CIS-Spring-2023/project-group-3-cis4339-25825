@@ -1,8 +1,6 @@
 <script>
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
-import axios from 'axios'
-const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
   setup() {
@@ -10,18 +8,16 @@ export default {
   },
   data() {
     return {
-      // removed unnecessary extra array to track services
-      service: {
+      service: { // service object with default values
         name: '',
         status: '',
+        description: ''
       }
     }
   },
   methods: {
     handleSubmitForm() {
-      if (isFormCorrect) {
           alert('Service has been added.')
-      }
     }
   },
   // sets validations for the various data properties
@@ -59,21 +55,23 @@ export default {
               <span style="color: #ff0000">*</span>
               <input
                 type="text"
-                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                id="name"
+                class="w-50 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 v-model="service.name"
               />
             </label>
             </div>
               <div class="flex flex-col w-50">
-            <label class="block">
+            <label>
               <span class="text-gray-700">Service Description</span>
-              <span style="color: #ff0000">*</span>
+              <span style="color: #ff0000"></span>
               <input
                 type="text"
-                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                id="description"
+                class="w-50 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 v-model="service.description"
               />
-              <label class="block">
+              <label>
               <span class="text-gray-700">Active Service Status?  </span>
               <input type="checkbox" id="status" v-model="service.status">
               </label>
@@ -91,9 +89,7 @@ export default {
 
           <!-- form field -->
           <div class="flex flex-col">
-
           </div>
-
           <div></div>
           <div class="flex justify-between mt-10 mr-20">
             <button
