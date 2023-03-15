@@ -54,6 +54,11 @@ const routes = [
     path: '/updateService', // added path for the update service page
     name: 'updateservice',
     component: () => import('../components/updateService.vue') // component path
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('../components/loginForm.vue')
   }
 ]
 const router = createRouter({
