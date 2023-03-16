@@ -1,0 +1,178 @@
+<!-- To Do for Sprint 3: services transform into dynamic API call to backend-->
+<!-- Current services are stored in serviceData.json in assets - these are hard-coded-->
+
+<script>
+import ServiceData from '../assets/ServiceData.json' // import service data
+import { userLoggedIn } from '/store/userLogin.js' // import userLoggedIn function from store.js
+
+export default { // export default to allow other pages to import this page
+  data() { 
+    return {
+      queryData: [],
+      // Parameter for search to occur
+      searchBy: '',
+      serviceName: '',
+      serviceStatus: '',
+      serviceDescription: '',
+    }
+  },
+  created() {
+    this.getServices() // get all services on page load
+  },
+  setup() {
+    const store = userLoggedIn();
+    return { store }
+  },
+  methods: {
+    handleSubmitForm() { 
+      if (this.searchBy === 'Service Name') { // if search by service name
+        this.$router.push({ name: 'updateservice'}) // search by service name
+      }
+      else if (this.searchBy === 'Service Status') { // if search by service status
+        this.$router.push({ name: 'updateservice' }) // search by service status
+      }
+    },
+    // abstract get services call
+    getServices() {
+      this.queryData = ServiceData.currentServices // set queryData to service data
+    },
+    clearSearch() {
+      // Resets all the variables
+      this.searchBy = ''
+      this.serviceName = ''
+      this.serviceStatus = ''
+
+
+      // get all entries
+      this.getServices()
+    },
+    editService() {
+      this.$router.push({ name: 'updateservice' }) // route to update service page
+    },
+    addService() {
+      this.$router.push({ name: 'serviceform' }) // route to create service page
+    },
+  }
+}
+</script>
+<template>
+  <main>
+    <div>
+      <h1
+        class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10"
+      >
+        Services
+      </h1>
+      <div v-if="store.userType === 'editor'">
+      <div class="px-10 pt-20">
+      <h2 class="text-2xl font-bold">Add a New Service</h2>
+      <div class="text-center">
+      <button class="bg-red-700 text-white rounded"
+            @click="addService"
+            type="submit"> 
+            Add New Service 
+      </button>
+      </div>
+      </div>
+      </div>
+    </div>
+    <div class="px-10 pt-20">
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
+      >
+        <h2 class="text-2xl font-bold">Search Service By</h2>
+        <!-- Displays Service Name search field -->
+        <div class="flex flex-col">
+          <select
+            class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            v-model="searchBy"
+          >
+            <option value="Service Name">Service Name</option>
+            <option value="Service Status">Service Status</option>
+          </select>
+        </div>
+        <div class="flex flex-col" v-if="searchBy === 'Service Name'">
+          <label class="block">
+            <input
+              type="text"
+              class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              v-model="serviceName"
+              v-on:keyup.enter="handleSubmitForm"
+              placeholder="Enter service name"
+            />
+            </label>
+        </div>
+        <div class="flex flex-col" v-if="searchBy === 'Service Status'">
+          <input
+            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            type="text"
+            v-model="serviceStatus"
+            v-on:keyup.enter="handleSubmitForm"
+            placeholder="Enter Service Status"
+          />
+        </div>
+        </div>
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
+        >
+        <div></div>
+        <div></div>
+        <div class="mt-5 grid-cols-2">
+          <button
+            class="mr-10 border border-red-700 bg-white text-red-700 rounded"
+            @click="clearSearch"
+            type="submit"
+          >
+            Clear Search
+          </button>
+          <button
+            class="bg-red-700 text-white rounded"
+            @click="handleSubmitForm"
+            type="submit"
+          >
+            Search Service
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <hr class="mt-10 mb-10" />
+    <!-- Display Found Data -->
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
+    >
+      <div class="ml-10">
+        <h2 class="text-2xl font-bold">List of Services</h2>
+        <h3 class="italic">Click table row to edit/display an entry</h3>
+      </div>
+      <div class="flex flex-col col-span-2">
+        <table class="min-w-full shadow-md rounded">
+          <thead class="bg-gray-50 text-xl">
+            <tr>
+              <th class="p-4 text-left">Service Name</th>
+              <th class="p-4 text-left">Status</th>
+              <th class="p-4 text-left">Description</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-300">
+            <tr
+              @click="editService(service.id)"
+              v-for="service in queryData"
+              :key="service.id"
+            >
+              <td class="p-2 text-left">
+                {{ service.name}} <!-- display service name -->
+              </td>
+              <td class="p-2 text-left">
+                {{ service.status==1 ? 'Inactive' : 'Active'}} <!-- ternary operator to display status -->
+              </td>
+              <td class="p-2 text-left">
+                {{ service.description}} <!-- display service description -->
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</template>

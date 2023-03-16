@@ -4,13 +4,15 @@ import { required, email, alpha, numeric } from '@vuelidate/validators'
 import VueMultiselect from 'vue-multiselect'
 import axios from 'axios'
 import { DateTime } from 'luxon'
+import { userLoggedIn } from '../../store/userLogin'
 const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
   props: ['id'],
   components: { VueMultiselect },
   setup() {
-    return { v$: useVuelidate({ $autoDirty: true }) }
+    const store = userLoggedIn();
+    return { v$: useVuelidate({ $autoDirty: true }), store }
   },
   data() {
     return {
@@ -76,7 +78,8 @@ export default {
       // Checks to see if there are any errors in validation
       const isFormCorrect = await this.v$.$validate()
       // If no errors found. isFormCorrect = True then the form is submitted
-      if (isFormCorrect) {
+      if ((isFormCorrect) && (this.store.userType === 'editor')) { // checks form correctness & usertype
+ {
         axios
           .put(`${apiURL}/clients/update/${this.id}`, this.client)
           .then(() => {
@@ -84,8 +87,13 @@ export default {
             this.$router.back()
           })
       }
+    }
+      else {
+        alert('You do not have permission to edit clients.') // if usertype is not editor
+      }
     },
     addToEvent() {
+      if (this.store.userType === 'editor') { // checks usertype
       this.eventsSelected.forEach((event) => {
         axios
           .put(`${apiURL}/events/register`, null, {
@@ -100,11 +108,16 @@ export default {
       })
       // clear events selection after attempting to register for events
       this.eventsSelected = []
-    },
+    }
+    else {
+      alert('You do not have permission to add a client to events.') // if usertype is not editor
+    }
+  },
     // replaces client hard delete
     // find all events where client appears in attendees array and pull it
     // then pull org from client org array
     deregisterClient() {
+      if (this.store.userType === 'editor') { // checks usertype
       axios
         .get(`${apiURL}/events/client/${this.id}`)
         .then((res) => {
@@ -120,6 +133,10 @@ export default {
             this.$router.push({ name: 'findclient' })
           })
         )
+      }
+      else {
+        alert('You do not have permission to deactivate a client.') // if usertype is not editor
+      }
     },
     // unused hard delete method
     deleteClient() {

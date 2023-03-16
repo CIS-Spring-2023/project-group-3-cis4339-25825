@@ -39,6 +39,26 @@ const routes = [
     name: 'eventdetails',
     props: true,
     component: () => import('../components/eventDetails.vue')
+  },
+  {
+    path: '/services', // added path for the services page
+    name: 'services',
+    component: () => import('../components/services.vue') // component path
+  },
+  {
+    path: '/serviceform', // added path for the add services page
+    name: 'serviceform',
+    component: () => import('../components/serviceForm.vue') // component path
+  },
+  {
+    path: '/updateservice', // added path for the update service page
+    name: 'updateservice',
+    component: () => import('../components/updateService.vue') // component path
+  },
+  {
+    path: '/login', // added path for the login page
+    name: 'login',
+    component: () => import('../components/loginForm.vue')
   }
 ]
 const router = createRouter({
