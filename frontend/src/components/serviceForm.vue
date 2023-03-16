@@ -20,6 +20,7 @@ export default {
   methods: {
     handleSubmitForm() {
           alert('Service has been added.')
+          this.$router.push({ name: 'services' }) // route to services page
     }
   },
   // sets validations for the various data properties
