@@ -16,16 +16,21 @@ export default {
     const borderColor = backgroundColor.map((e) =>
       e.replace(/[\d\.]+\)$/g, '1)')
     )
-    await new Chart(this.$refs.attendanceChart, {
+    await new Chart(this.$refs.AttendanceChart2, {
       type: 'doughnut',
       data: {
-        labels: this.label,
+        labels: [
+          '77001',
+          '77014',
+          '77025',
+          '77003'
+        ],
         datasets: [
           {
             borderWidth: 1,
             backgroundColor: backgroundColor,
             borderColor: borderColor,
-            data: this.chartData
+            data: [12,17,8,10]
           }
         ]
       },
