@@ -1,5 +1,6 @@
 <script>
 import axios from 'axios'
+import { userLoggedIn } from '../store/userLogin.js'
 const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
@@ -13,8 +14,12 @@ export default {
     axios.get(`${apiURL}/org`).then((res) => {
       this.orgName = res.data.name
     })
+  },
+  setup() {
+    const store = userLoggedIn();
+    return { store }
   }
-}
+};
 </script>
 <template>
   <main class="flex flex-row">
@@ -35,7 +40,7 @@ export default {
                 Dashboard
               </router-link>
             </li>
-            <li>
+            <li v-if.prevent="!store.isLoggedIn">
               <router-link to="/login">
                 <span
                   style="position: relative; top: 6px"
@@ -44,7 +49,7 @@ export default {
                 >Login
               </router-link>
             </li>
-            <li>
+            <li v-if="store.userType === 'editor'">
               <router-link to="/intakeform">
                 <span
                   style="position: relative; top: 6px"
@@ -54,7 +59,7 @@ export default {
                 Client Intake Form
               </router-link>
             </li>
-            <li>
+            <li v-if="store.userType === 'editor'">
               <router-link to="/eventform">
                 <span
                   style="position: relative; top: 6px"
@@ -95,6 +100,11 @@ export default {
                 Find Event
               </router-link>
             </li>
+              <li class="nav-item" v-if="store.isLoggedIn">
+                <a href="">
+                  <span @click.prevent="store.logout()" class="nav-link"><i class="material-icons">logout</i> Logout</span>
+                </a>
+              </li>
           </ul>
         </nav>
       </header>

@@ -41,6 +41,7 @@ export default {
         >
           <h2 class="text-2xl font-bold">Services To Update</h2>
         </div>
+        <br>
           <!-- form field -->
           <div class="flex flex-col">
             <label class="block">
@@ -53,7 +54,7 @@ export default {
               />
             </label>
           </div>
-
+          <br>
           <!-- form field -->
           <div class="flex flex-col">
             <label class="block">
@@ -66,7 +67,7 @@ export default {
               />
             </label>
           </div>
-
+          <br>
           <!-- form field -->
           <div class="flex flex-col">
               <label class="block">
