@@ -1,3 +1,6 @@
+<!-- To Do for Sprint 3: services transform into dynamic API call to backend-->
+<!-- Current services are stored in serviceData.json in assets - these are hard-coded-->
+
 <script>
 import ServiceData from '../assets/ServiceData.json' // import service data
 import { userLoggedIn } from '/store/userLogin.js' // import userLoggedIn function from store.js
@@ -8,7 +11,7 @@ export default { // export default to allow other pages to import this page
       queryData: [],
       // Parameter for search to occur
       searchBy: '',
-      servicetName: '',
+      serviceName: '',
       serviceStatus: '',
       serviceDescription: '',
     }
@@ -43,8 +46,8 @@ export default { // export default to allow other pages to import this page
       // get all entries
       this.getServices()
     },
-    editService(serviceID) {
-      this.$router.push({ name: 'updateservice', params: { id: serviceID } }) // route to update service page
+    editService() {
+      this.$router.push({ name: 'updateservice' }) // route to update service page
     },
     addService() {
       this.$router.push({ name: 'serviceform' }) // route to create service page

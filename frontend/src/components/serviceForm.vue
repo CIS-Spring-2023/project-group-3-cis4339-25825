@@ -1,3 +1,5 @@
+<!-- To do for Sprint 3: make services dynamic -->
+
 <script>
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'

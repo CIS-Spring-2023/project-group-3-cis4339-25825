@@ -1,3 +1,4 @@
+<!-- To do for Sprint 3: make services dynamic -->
 <script>
 import { userLoggedIn } from '/store/userLogin.js' // import userLoggedIn function from store.js
 export default {
