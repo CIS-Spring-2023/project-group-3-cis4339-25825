@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia'
-export const userLoggedIn = defineStore({
+import { defineStore } from 'pinia' // import defineStore from 'pinia'
+export const userLoggedIn = defineStore({ // create user login state
     id: 'loggedIn',
     state: () => {
         return {
@@ -9,7 +9,7 @@ export const userLoggedIn = defineStore({
         }
     },
     actions: {
-        async login(username, password) {
+        async login(username, password) { // login action
             try {
                 const response = await fauxApi(username, password)
                 this.$patch({
@@ -22,7 +22,7 @@ export const userLoggedIn = defineStore({
                 console.log(error)
             }
         },
-        logout() {
+        async logout() { // logout action
             this.$patch({
                 name: '',
                 isLoggedIn: false,
@@ -33,14 +33,14 @@ export const userLoggedIn = defineStore({
     }
 })
 
-function fauxApi(username, password) {
-    if (username === 'Viewer' && password === 'viewer') {
+function fauxApi(username, password) { // fake api to emulate login credentials and response
+    if (username === 'Viewer' && password === 'viewer') { // if username and password match for viewer access
         return Promise.resolve({
             isPermitted: true,
             name: 'viewer',
             userType: 'viewer'
         })
-    } else if (username === 'Editor' && password === 'editor') {
+    } else if (username === 'Editor' && password === 'editor') { // if username and password match for editor access
             return Promise.resolve({
                 isPermitted: true,
                 name: 'editor',
@@ -48,6 +48,6 @@ function fauxApi(username, password) {
             })
         }
         else {
-            return Promise.reject(new Error ('Invalid credentials'))
+            return Promise.reject(new Error ('Invalid credentials')) // if username and password do not match any credentials
         }
     }

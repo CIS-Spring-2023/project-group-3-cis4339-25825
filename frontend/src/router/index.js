@@ -46,17 +46,17 @@ const routes = [
     component: () => import('../components/services.vue') // component path
   },
   {
-    path: '/serviceForm', // added path for the add services page
+    path: '/serviceform', // added path for the add services page
     name: 'serviceform',
     component: () => import('../components/serviceForm.vue') // component path
   },
   {
-    path: '/updateService', // added path for the update service page
+    path: '/updateservice/:id', // added path for the update service page to allow for future API call w/ ID
     name: 'updateservice',
     component: () => import('../components/updateService.vue') // component path
   },
   {
-    path: '/login',
+    path: '/login', // added path for the login page
     name: 'login',
     component: () => import('../components/loginForm.vue')
   }

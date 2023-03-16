@@ -1,5 +1,10 @@
 <script>
+import { userLoggedIn } from '/store/userLogin.js' // import userLoggedIn function from store.js
 export default {
+  setup() {
+      const store = userLoggedIn(); // call userLoggedIn function
+      return { store }
+  },
   data() {return {
       // Parameter for search to occur
       searchBy: '',
@@ -8,22 +13,32 @@ export default {
         status: '',
         description: '',
   },
-  created() {
-    this.getServices() // get all services on page load
-  },
+}
+},
   methods: {
     serviceUpdate() {
-      alert('Service has been updated.')
-      this.$router.push({ name: 'services' })
-    },
-    serviceDelete() {
-        alert('Event has been deleted.')
-        this.$router.push({ name: 'services' })
+      if (this.store.userType === 'editor') {
+      alert('Service has been updated.') // alert user that service has been updated
+      this.$router.push({ name: 'services' }) // route to services page
+      }
+      else {
+        alert('You do not have permission to update a service.') // alert user that they do not have permission to update a service
+        this.$router.push({ name: 'services' }) // route to services page
       }
     },
-  }
+    serviceDelete() {
+        if (this.store.userType === 'editor') {
+        alert('Event has been deleted.') // alert user that service has been deleted
+        this.$router.push({ name: 'services' }) // route to services page
+        }
+        else {
+          alert('You do not have permission to delete a service.') // alert user that they do not have permission to delete a service
+          this.$router.push({ name: 'services' }) // route to services page
+        }
+      },
+},
 }
-}
+
 </script>
 <template>
   <main>

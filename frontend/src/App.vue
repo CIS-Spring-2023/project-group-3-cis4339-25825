@@ -69,7 +69,7 @@ export default {
                 Create Event
               </router-link>
             </li>
-            <li>
+            <li v-if="store.isLoggedIn">
               <!-- added a new list item with the search page for services-->
               <router-link to="/services"> 
                 <span
@@ -80,7 +80,7 @@ export default {
                 Services
               </router-link>
             </li>
-            <li>
+            <li v-if="store.isLoggedIn">
               <router-link to="/findclient">
                 <span
                   style="position: relative; top: 6px"
@@ -90,7 +90,7 @@ export default {
                 Find Client
               </router-link>
             </li>
-            <li>
+            <li v-if="store.isLoggedIn">
               <router-link to="/findevents">
                 <span
                   style="position: relative; top: 6px"

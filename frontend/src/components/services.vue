@@ -1,5 +1,6 @@
 <script>
 import ServiceData from '../assets/ServiceData.json' // import service data
+import { userLoggedIn } from '/store/userLogin.js' // import userLoggedIn function from store.js
 
 export default { // export default to allow other pages to import this page
   data() { 
@@ -14,6 +15,10 @@ export default { // export default to allow other pages to import this page
   },
   created() {
     this.getServices() // get all services on page load
+  },
+  setup() {
+    const store = userLoggedIn();
+    return { store }
   },
   methods: {
     handleSubmitForm() { 
@@ -55,7 +60,7 @@ export default { // export default to allow other pages to import this page
       >
         Services
       </h1>
-      <div>
+      <div v-if="store.userType === 'editor'">
       <div class="px-10 pt-20">
       <h2 class="text-2xl font-bold">Add a New Service</h2>
       <div class="text-center">

@@ -4,12 +4,14 @@ import { required } from '@vuelidate/validators'
 import axios from 'axios'
 import { DateTime } from 'luxon'
 import ServiceData from '../assets/ServiceData.json' // import service data
+import { userLoggedIn } from '/store/userLogin.js' // import userLoggedIn function from store.js
 const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
   props: ['id'],
   setup() {
-    return { v$: useVuelidate({ $autoDirty: true }) }
+    const store = userLoggedIn();
+    return { v$: useVuelidate({ $autoDirty: true }), store }
   },
   data() {
     return {
@@ -56,19 +58,29 @@ export default {
         .toISODate()
     },
     handleEventUpdate() {
+      if (this.store.userType === 'editor') {
       axios.put(`${apiURL}/events/update/${this.id}`, this.event).then(() => {
         alert('Update has been saved.')
         this.$router.back()
       })
+    }
+    else {
+      alert('You do not have permission to edit this event.')
+    }
     },
     editClient(clientID) {
       this.$router.push({ name: 'updateclient', params: { id: clientID } })
-    },
+        },
     eventDelete() {
+      if (this.store.userType === 'editor') {
       axios.delete(`${apiURL}/events/${this.id}`).then(() => {
         alert('Event has been deleted.')
         this.$router.push({ name: 'findevents' })
       })
+    }
+    else {
+      alert('You do not have permission to delete this event.')
+    }
     },
     getServices() {
       this.servicesAvail = ServiceData.currentServices // set queryData to service data
