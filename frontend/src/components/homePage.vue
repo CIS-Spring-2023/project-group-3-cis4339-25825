@@ -14,6 +14,7 @@ export default {
       recentEvents: [],
       labels: [],
       chartData: [],
+      chartData2: [],
       loading: false,
       error: null
     }
@@ -111,12 +112,10 @@ export default {
               :label="labels"
               :chart-data="chartData"
             ></AttendanceChart>
-            <AttendanceChart2
-              v-if="!loading && !error"
-              :label="labels"
-              :chart-data="chartData"
-            ></AttendanceChart2>
-
+            </div>
+            <div>
+            <AttendanceChart2 />
+            </div>
             <!-- Start of loading animation -->
             <div class="mt-40" v-if="loading">
               <p
@@ -140,6 +139,5 @@ export default {
           </div>
         </div>
       </div>
-    </div>
   </main>
 </template>

@@ -1,60 +1,37 @@
-<script>
-import { Chart, registerables } from 'chart.js'
-Chart.register(...registerables)
+<script setup lang="ts">
+import { Chart } from 'chart.js';
+import { onMounted } from 'vue';
+const labels = ['77003', '77303', '77009', '77056'];
 
-export default {
-  props: {
-    label: {
-      type: Array
-    },
-    chartData: {
-      type: Array
-    }
-  },
-  async mounted() {
-    const backgroundColor = this.chartData.map(() => this.getColor())
-    const borderColor = backgroundColor.map((e) =>
-      e.replace(/[\d\.]+\)$/g, '1)')
-    )
-    await new Chart(this.$refs.AttendanceChart2, {
-      type: 'doughnut',
-      data: {
-        labels: [
-          '77001',
-          '77014',
-          '77025',
-          '77003'
-        ],
-        datasets: [
-          {
-            borderWidth: 1,
-            backgroundColor: backgroundColor,
-            borderColor: borderColor,
-            data: [12,17,8,10]
-          }
-        ]
-      },
-      options: {
-        plugins: {
-          legend: {
-            display: false
-          }
-        },
-        responsive: true,
-        maintainAspectRatio: true
-      }
-    })
-  },
-  methods: {
-    getColor() {
-      let channel = () => Math.random() * 255
-      return `rgba(${channel()}, ${channel()}, ${channel()}, 0.2)`
-    }
-  }
-}
+const data = {
+  labels: labels,
+  datasets: [{
+    data: [20, 12, 12, 9],
+    backgroundColor: [
+      'rgb(255, 99, 132)',
+      'rgb(54, 162, 235)',
+      'rgb(255, 205, 86)'
+    ],
+    hoverOffset: 4
+  }]
+};
+
+const config = {
+  type: 'doughnut',
+  data: data,
+};
+onMounted(() => {
+  const attendanceChart2 = new Chart(
+    document.getElementById('attendanceChart2'),
+    config
+);
+});
+
+
+
 </script>
 <template>
   <div class="shadow-lg rounded-lg overflow-hidden">
-    <canvas class="p-10" ref="attendanceChart"></canvas>
+    <canvas id="attendanceChart2"></canvas>
   </div>
 </template>
