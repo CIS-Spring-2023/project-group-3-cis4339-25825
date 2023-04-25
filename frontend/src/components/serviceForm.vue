@@ -3,6 +3,8 @@
 <script>
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
+import axios from 'axios'
+const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
   setup() {
@@ -10,6 +12,7 @@ export default {
   },
   data() {
     return {
+      org: '',
       service: { // service object with default values
         name: '',
         status: '',
@@ -17,10 +20,22 @@ export default {
       }
     }
   },
+  created() { //DH - gets the organization id
+    axios.get(`${apiURL}/org`).then((res) => {
+      this.org = res.data._id
+    })
+  },
   methods: {
     handleSubmitForm() {
-          alert('Service has been added.')
+      //DH - adds service to database
+      this.$axios.post(`${apiURL}/services`, this.service)
+        .then(() => {
           this.$router.push({ name: 'services' }) // route to services page
+          alert('Service added successfully!') // alert user that service was added
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
   },
   // sets validations for the various data properties
@@ -30,7 +45,7 @@ export default {
         name: { required }
       }
     }
-  }
+  },
 }
 </script>
 <template>
