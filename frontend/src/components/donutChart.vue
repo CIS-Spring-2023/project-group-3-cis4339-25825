@@ -12,7 +12,7 @@ export default {
       type: Array
       //How to populate this? In the later section?
     },
-    loaded: false
+    loaded: false //used to ensure chart waits for data before loading
   },
   async mounted() {
     const backgroundColor = this.chartData.map(() => this.getColor())
@@ -22,6 +22,7 @@ export default {
     await new Chart(this.$refs.AttendanceChart, { //Was "AttendanceChart2"; if issues, revert and test again
       type: 'doughnut',
       data: {
+        loaded: false, //initialized correctly; if something goes wrong, better to have no chart
         labels: [ //replace with data from the API; need to know which zips will be measured
         //An array? IF the zip code retrieved is not already in the array, THEN add it?
         //After array is filled, use it to define how many labels we'll need
@@ -48,11 +49,11 @@ export default {
             data: [12,17,8,10]
             //Replace hard-coded data below with what comes back from the try-catch block
             //To-Do: fill in the API path in the try-catch block
-            
+
             /* try {
               const dataList = await fetch('API call')
               this.chartData = dataList
-              this.loaded = true
+              this.loaded = true //if the data successfully loads, then we're clear to load the chart
             } catch(e){
               console.error(e)
             } */
