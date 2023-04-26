@@ -22,6 +22,7 @@ export default {
         labels: [ //replace with data from the API; need to know which zips will be measured
         //An array? IF the zip code retrieved is not already in the array, THEN add it?
         //After array is filled, use it to define how many labels we'll need
+        //Endpoints?
           '77001',
           '77014',
           '77025',
@@ -30,6 +31,7 @@ export default {
         datasets: [
           { //Change colors to be random? any new label gets assigned a random color?
             //Data from the same API as the labels, but this time we just read pass it to the chart
+            //Endpoints?
             borderWidth: 1,
             backgroundColor: backgroundColor,
             borderColor: borderColor,
@@ -57,6 +59,10 @@ export default {
 }
 </script>
 <template>
+  <div class="container">
+    <!-- Meant to prevent the chart loading before data is successfully retrieved -->
+    <Doughnut v-if="loaded" :data="chartData"/>
+  </div>
   <div class="shadow-lg rounded-lg overflow-hidden">
     <canvas class="p-10" ref="attendanceChart"></canvas>
   </div>
