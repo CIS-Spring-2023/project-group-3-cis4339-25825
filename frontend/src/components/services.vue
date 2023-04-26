@@ -1,14 +1,12 @@
-<!-- To Do for Sprint 3: services transform into dynamic API call to backend-->
-<!-- Current services are stored in serviceData.json in assets - these are hard-coded-->
-
 <script>
-import ServiceData from '../assets/ServiceData.json' // import service data
 import { userLoggedIn } from '/store/userLogin.js' // import userLoggedIn function from store.js
+import axios from 'axios' // import axios
+const apiURL = import.meta.env.VITE_ROOT_API // set apiURL to root api
 
 export default { // export default to allow other pages to import this page
   data() { 
     return {
-      queryData: [],
+      services: [],
       // Parameter for search to occur
       searchBy: '',
       serviceName: '',
@@ -16,7 +14,7 @@ export default { // export default to allow other pages to import this page
       serviceDescription: '',
     }
   },
-  created() {
+  mounted() {
     this.getServices() // get all services on page load
   },
   setup() {
@@ -24,30 +22,35 @@ export default { // export default to allow other pages to import this page
     return { store }
   },
   methods: {
-    handleSubmitForm() { 
+    handleSubmitForm() { // search service by name or status
+      let endpoint = ''
       if (this.searchBy === 'Service Name') { // if search by service name
-        this.$router.push({ name: 'updateservice'}) // search by service name
+        endpoint = `services/search/?name=${this.serviceName}&searchBy=name` // search by service name
       }
-      else if (this.searchBy === 'Service Status') { // if search by service status
-        this.$router.push({ name: 'updateservice' }) // search by service status
+      else if (this.searchBy === 'Service Description') { // if search by service status
+        endpoint=`services/search/?serviceDescription=${this.serviceStatus}&searchBy=description` // search by service status
       }
+      axios.get(`${apiURL}/${endpoint}`).then((res) => { // get request to api
+        this.services = res.data // set services to response data
+      })
     },
     // abstract get services call
     getServices() {
-      this.queryData = ServiceData.currentServices // set queryData to service data
+      axios.get(`${apiURL}/services`).then((res) => {
+      this.services = res.data
+      })
+      window.scrollTo(0,0)
     },
     clearSearch() {
       // Resets all the variables
       this.searchBy = ''
       this.serviceName = ''
-      this.serviceStatus = ''
-
 
       // get all entries
       this.getServices()
     },
-    editService() {
-      this.$router.push({ name: 'updateservice' }) // route to update service page
+    editService(serviceID) {
+      this.$router.push({ name: 'updateservice', params: {id: serviceID} }) // route to update service page
     },
     addService() {
       this.$router.push({ name: 'serviceform' }) // route to create service page
@@ -88,7 +91,7 @@ export default { // export default to allow other pages to import this page
             v-model="searchBy"
           >
             <option value="Service Name">Service Name</option>
-            <option value="Service Status">Service Status</option>
+            <option value="Service Status">Service Description</option>
           </select>
         </div>
         <div class="flex flex-col" v-if="searchBy === 'Service Name'">
@@ -102,13 +105,13 @@ export default { // export default to allow other pages to import this page
             />
             </label>
         </div>
-        <div class="flex flex-col" v-if="searchBy === 'Service Status'">
+        <div class="flex flex-col" v-if="searchBy === 'Service Description'">
           <input
             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             type="text"
-            v-model="serviceStatus"
+            v-model="serviceDescription"
             v-on:keyup.enter="handleSubmitForm"
-            placeholder="Enter Service Status"
+            placeholder="Enter Service Descrpition"
           />
         </div>
         </div>
@@ -150,21 +153,17 @@ export default { // export default to allow other pages to import this page
           <thead class="bg-gray-50 text-xl">
             <tr>
               <th class="p-4 text-left">Service Name</th>
-              <th class="p-4 text-left">Status</th>
               <th class="p-4 text-left">Description</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-300">
+            <tbody class="divide-y divide-gray-300">
             <tr
-              @click="editService(service.id)"
-              v-for="service in queryData"
-              :key="service.id"
+              @click="editService(service._id)"
+              v-for="service in services"
+              :key="service._id"
             >
               <td class="p-2 text-left">
                 {{ service.name}} <!-- display service name -->
-              </td>
-              <td class="p-2 text-left">
-                {{ service.status==1 ? 'Inactive' : 'Active'}} <!-- ternary operator to display status -->
               </td>
               <td class="p-2 text-left">
                 {{ service.description}} <!-- display service description -->

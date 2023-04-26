@@ -4,9 +4,9 @@ const router = express.Router()
 const org = process.env.ORG
 
 // importing data model schemas
-const { services } = require('../models/models')
+const { services, orgs } = require('../models/models')
 
-// GET 10 most recent clients for org
+// GET services for org
 router.get('/', (req, res, next) => {
   services
     .find({ orgs: org }, (error, data) => {
@@ -17,7 +17,6 @@ router.get('/', (req, res, next) => {
       }
     })
     .sort({ updatedAt: -1 })
-    .limit(10)
 })
 
 // GET single service by ID

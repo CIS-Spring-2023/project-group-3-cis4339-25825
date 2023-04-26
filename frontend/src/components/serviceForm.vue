@@ -4,7 +4,7 @@
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import axios from 'axios'
-const apiURL = import.meta.env.VITE_ROOT_API
+const apiURL = import.meta.env.VITE_ROOT_API // set apiURL to root api
 
 export default {
   setup() {
@@ -12,7 +12,7 @@ export default {
   },
   data() {
     return {
-      org: '',
+      org: '', //DH - organization id for service
       service: { // service object with default values
         name: '',
         status: '',
@@ -28,10 +28,16 @@ export default {
   methods: {
     handleSubmitForm() {
       //DH - adds service to database
-      this.$axios.post(`${apiURL}/services`, this.service)
+      axios
+      .post(`${apiURL}/services`, {
+        name: this.service.name,
+        status: this.service.status,
+        description: this.service.description,
+        org: this.org
+      })
         .then(() => {
           this.$router.push({ name: 'services' }) // route to services page
-          alert('Service added successfully!') // alert user that service was added
+          alert('Service added!') // alert user that service was added
         })
         .catch((err) => {
           console.log(err)
@@ -89,9 +95,10 @@ export default {
                 class="w-50 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 v-model="service.description"
               />
+              <br>
               <label>
               <span class="text-gray-700">Active Service Status?  </span>
-              <input type="checkbox" id="status" v-model="service.status">
+              <input type="checkbox" id="status" v-model="service.status" checked>
               </label>
               <span class="text-black" v-if="v$.service.name.$error">
                 <p
