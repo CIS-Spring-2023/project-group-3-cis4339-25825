@@ -19,14 +19,17 @@ export default {
     await new Chart(this.$refs.AttendanceChart2, {
       type: 'doughnut',
       data: {
-        labels: [
+        labels: [ //replace with data from the API; need to know which zips will be measured
+        //An array? IF the zip code retrieved is not already in the array, THEN add it?
+        //After array is filled, use it to define how many labels we'll need
           '77001',
           '77014',
           '77025',
           '77003'
         ],
         datasets: [
-          {
+          { //Change colors to be random? any new label gets assigned a random color?
+            //Data from the same API as the labels, but this time we just read pass it to the chart
             borderWidth: 1,
             backgroundColor: backgroundColor,
             borderColor: borderColor,
