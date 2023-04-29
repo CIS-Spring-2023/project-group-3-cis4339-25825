@@ -27,12 +27,7 @@ export default {
     handleSubmitForm() {
       //DH - Axios call to POST service to database
       axios
-      .post(`${apiURL}/services`, {
-        name: this.service.name,
-        active: this.service.active,
-        description: this.service.description,
-        org: this.org
-      })
+      .post(`${apiURL}/services`, this.service)
         .then(() => {
           this.$router.push({ name: 'services' }) //DH: Route to services page
           alert('Service added!') //DH: Alert user that service was added

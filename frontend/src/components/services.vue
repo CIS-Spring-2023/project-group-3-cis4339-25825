@@ -6,7 +6,8 @@ const apiURL = import.meta.env.VITE_ROOT_API //DH: Set apiURL to root api
 export default { //DH: Export default to allow other pages to import this page
   data() { 
     return {
-      services: [], //DH: Create services array
+      services: [], //DH: Create services array for all services
+      filteredServices: [], //DH: Create filteredServices array for filtered services
       searchBy: '',
       serviceName: '',
       serviceStatus: '',
@@ -164,11 +165,11 @@ export default { //DH: Export default to allow other pages to import this page
               v-for="service in services"
               :key="service._id"
             >
-              <td class="p-2 text-left">
-                {{ service.name}} <!--DH: Display service name -->
+              <td class="p-2 text-left" v-if="service.active === true">
+                {{ service.name }} <!--DH: Display service name if service is active -->
               </td>
-              <td class="p-2 text-left">
-                {{ service.description}} <!--DH: Display service description -->
+              <td class="p-2 text-left" v-if="service.active === true">
+                {{ service.description}} <!--DH: Display service description if service is active -->
               </td>
             </tr>
           </tbody>
