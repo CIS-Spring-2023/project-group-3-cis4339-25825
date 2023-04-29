@@ -1,12 +1,12 @@
-const express = require('express')
-const router = express.Router()
+const express = require('express') // Importing express
+const router = express.Router() //Creating express router
 
-const org = process.env.ORG
+const org = process.env.ORG //Importing ORG from .env file
 
-// importing data model schemas
-const { services, orgs } = require('../models/models')
+//DH: Importing data model schema for services
+const { services } = require('../models/models')
 
-// GET services for org
+//DH: GET all services for org speciiied in .env
 router.get('/', (req, res, next) => {
   services
     .find({ orgs: org }, (error, data) => {
@@ -19,9 +19,8 @@ router.get('/', (req, res, next) => {
     .sort({ updatedAt: -1 })
 })
 
-// GET single service by ID
+//DH: GET single service by Object ID
 router.get('/id/:id', (req, res, next) => {
-  // use findOne instead of find to not return array
   services.findOne({ _id: req.params.id, orgs: org }, (error, data) => {
     if (error) {
       return next(error)
@@ -33,18 +32,15 @@ router.get('/id/:id', (req, res, next) => {
   })
 })
 
-// GET entries based on search query
+//DH: GET service entries based on search query either by name or description
 router.get('/search', (req, res, next) => {
   const dbQuery = { orgs: org }
   switch (req.query.searchBy) {
     case 'name':
       dbQuery.name = { $regex: `^${req.query.name}`, $options: 'i' }
       break
-    case 'status':
-      dbQuery['status'] = {
-        $regex: `^${req.query['status']}`,
-        $options: 'i'
-      }
+    case 'description':
+      dbQuery.description = { $regex: `^${req.query.description}`, $options: 'i' }
       break
     default:
       return res.status(400).send('invalid searchBy')
@@ -58,26 +54,7 @@ router.get('/search', (req, res, next) => {
   })
 })
 
-// GET lookup by name, verify org membership on frontend
-router.get('/lookup/:name', (req, res, next) => {
-  services.findOne(
-    {
-      ['name']: {
-        $regex: `^${req.params.name}`,
-        $options: 'i'
-      }
-    },
-    (error, data) => {
-      if (error) {
-        return next(error)
-      } else {
-        res.json(data)
-      }
-    }
-  )
-})
-
-// POST new service
+//DH - POST new service entry
 router.post('/', (req, res, next) => {
   const newService = req.body
   newService.orgs = [org]
@@ -90,7 +67,7 @@ router.post('/', (req, res, next) => {
   })
 })
 
-// PUT update service
+// DH - PUT update service
 router.put('/update/:id', (req, res, next) => {
   services.findByIdAndUpdate(req.params.id, req.body, (error, data) => {
     if (error) {
@@ -101,36 +78,5 @@ router.put('/update/:id', (req, res, next) => {
   })
 })
 
-// PUT add existing service to org
-router.put('/register/:id', (req, res, next) => {
-  services.findByIdAndUpdate(
-    req.params.id,
-    { $push: { orgs: org } },
-    (error, data) => {
-      if (error) {
-        console.log(error)
-        return next(error)
-      } else {
-        res.send('Service registered with org')
-      }
-    }
-  )
-})
 
-// PUT remove existing service from org
-router.put('/deregister/:id', (req, res, next) => {
-  services.findByIdAndUpdate(
-    req.params.id,
-    { $pull: { orgs: org } },
-    (error, data) => {
-      if (error) {
-        console.log(error)
-        return next(error)
-      } else {
-        res.send('Service deregistered with org')
-      }
-    }
-  )
-})
-
-module.exports = router
+module.exports = router //Exporting router

@@ -141,7 +141,6 @@ const serviceDataSchema = new Schema(
     },
     active: {
       type: Boolean,
-      default: true
     },
     orgs: {
       type: [{ type: String, ref: 'org' }],

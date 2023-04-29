@@ -1,5 +1,3 @@
-<!-- To do for Sprint 3: make services dynamic -->
-
 <script>
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
@@ -12,32 +10,32 @@ export default {
   },
   data() {
     return {
-      org: '', //DH - organization id for service
-      service: { // service object with default values
+      org: '', //DH: Organization id for service
+      service: { //DH: Service object with default values
         name: '',
-        status: '',
+        active: true,
         description: ''
       }
     }
   },
-  created() { //DH - gets the organization id
+  created() { //DH - Gets the organization ID to add service to
     axios.get(`${apiURL}/org`).then((res) => {
       this.org = res.data._id
     })
   },
   methods: {
     handleSubmitForm() {
-      //DH - adds service to database
+      //DH - Axios call to POST service to database
       axios
       .post(`${apiURL}/services`, {
         name: this.service.name,
-        status: this.service.status,
+        active: this.service.active,
         description: this.service.description,
         org: this.org
       })
         .then(() => {
-          this.$router.push({ name: 'services' }) // route to services page
-          alert('Service added!') // alert user that service was added
+          this.$router.push({ name: 'services' }) //DH: Route to services page
+          alert('Service added!') //DH: Alert user that service was added
         })
         .catch((err) => {
           console.log(err)
@@ -48,7 +46,7 @@ export default {
   validations() {
     return {
       service: {
-        name: { required }
+        name: { required } //DH: Name is required
       }
     }
   },
@@ -64,7 +62,7 @@ export default {
       </h1>
     </div>
     <div class="px-10 py-20">
-      <!-- @submit.prevent stops the submit service from reloading the page-->
+      <!-- DH: Submitted form calls handleSubmitForm method defined above-->
       <form @submit.prevent="handleSubmitForm">
         <!-- grid container -->
         <div
@@ -72,7 +70,7 @@ export default {
         >
           <h2 class="text-2xl font-bold">Service Details</h2>
 
-          <!-- form field -->
+          <!--DH: Enter service name -->
           <div class="flex flex-col w-50">
             <label class="block">
               <span class="text-gray-700">Service Name</span>
@@ -84,6 +82,7 @@ export default {
                 v-model="service.name"
               />
             </label>
+            <!--DH: Enter service description -->
             </div>
               <div class="flex flex-col w-50">
             <label>
@@ -97,8 +96,9 @@ export default {
               />
               <br>
               <label>
-              <span class="text-gray-700">Active Service Status?  </span>
-              <input type="checkbox" id="status" v-model="service.status" checked>
+                <!--Define Active Status of Service - Default is Active-->
+              <span class="text-gray-700">Active Service Status?</span>
+              <input type="checkbox" id="status" v-model="service.active" checked>
               </label>
               <span class="text-black" v-if="v$.service.name.$error">
                 <p
