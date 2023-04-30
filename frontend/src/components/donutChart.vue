@@ -1,37 +1,48 @@
-<script setup lang="ts">
-import { Chart } from 'chart.js';
-import { onMounted } from 'vue';
-const labels = ['77003', '77303', '77009', '77056'];
+<script>
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
 
-const data = {
-  labels: labels,
-  datasets: [{
-    data: [20, 12, 12, 9],
-    backgroundColor: [
-      'rgb(255, 99, 132)',
-      'rgb(54, 162, 235)',
-      'rgb(255, 205, 86)'
-    ],
-    hoverOffset: 4
-  }]
-};
+export default { //DH: This is the zip code donut chart for the home page
+    props: {
+        labels: {
+            type: Array
+        },
+        data: {
+            type: Array
+        }
+    },
+    async mounted() {
+        const backgroundColor = this.data.map(() => this.getColor())
+        const borderColor = backgroundColor.map((e) =>
+            e.replace(/[\d\.]+\)$/g, '1)')
+        )
 
-const config = {
-  type: 'doughnut',
-  data: data,
-};
-onMounted(() => {
-  const attendanceChart2 = new Chart(
-    document.getElementById('attendanceChart2'),
-    config
-);
-});
-
-
-
+        await new Chart(this.$refs.chart3, { //DH: Create the donut chart
+            type: 'doughnut',
+            data: {
+                labels: this.labels, //DH: Zip codes are the labels
+                datasets: [
+                    {
+                    backgroundColor: backgroundColor,
+                    borderColor: borderColor,
+                    data: this.data, //DH: Number of clients in each zip code
+                    hoverOffset: 4 //DH: Increase the hover offset
+                    }
+                ]
+            },
+        })
+    },
+    methods: { //DH: Get a random color for the donut chart slices
+        getColor() {
+            let channel = () => Math.random() * 255
+            return `rgba(${channel()}, ${channel()}, ${channel()}, 0.2)`
+        }
+    }
+}
+                            
 </script>
 <template>
-  <div class="shadow-lg rounded-lg overflow-hidden">
-    <canvas id="attendanceChart2"></canvas>
-  </div>
+    <div class="shadow-lg rounded-lg overflow-hidden">
+        <canvas class="p-10" ref="chart3"></canvas> <!-- DH: Create the canvas for the donut chart -->
+    </div>
 </template>

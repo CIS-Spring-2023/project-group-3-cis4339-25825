@@ -80,6 +80,25 @@ router.get('/lookup/:phoneNumber', (req, res, next) => {
   )
 })
 
+//DH: GET unique zip codes and place in array with count of clients in each zip code and exclude null zip codes
+router.get('/zipcodes', (req, res, next) => {
+  clients
+    .aggregate([
+      //DH: If zip code is null, exclude from results
+      { $match: { orgs: org, 'address.zip': { $ne: '' } } },
+      { $match: { orgs: org } },
+      { $group: { _id: '$address.zip', count: { $sum: 1 } } },
+    ])
+    .exec((error, data) => {
+      if (error) {
+        return next(error)
+      } else {
+        res.json(data)
+      }
+    })
+})
+
+
 // POST new client
 router.post('/', (req, res, next) => {
   const newClient = req.body

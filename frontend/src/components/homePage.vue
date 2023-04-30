@@ -2,12 +2,13 @@
 import { DateTime } from 'luxon'
 import axios from 'axios'
 import AttendanceChart from './barChart.vue'
-import AttendanceChart2 from './donutChart.vue'
+import Chart3 from './donutChart.vue'
 const apiURL = import.meta.env.VITE_ROOT_API
+
 export default {
   components: {
     AttendanceChart,
-    AttendanceChart2
+    Chart3
   },
   data() {
     return {
@@ -15,12 +16,15 @@ export default {
       labels: [],
       chartData: [],
       chartData2: [],
+      chartData3: [],
+      chart3Labels: [],
       loading: false,
       error: null
     }
   },
   mounted() {
-    this.getAttendanceData()
+    this.getAttendanceData(),
+    this.getZips()
   },
   methods: {
     async getAttendanceData() {
@@ -55,6 +59,40 @@ export default {
         }
       }
       this.loading = false
+    },
+    async getZips() {
+      // get zip codes from database and store in array with count of each zip code
+      try {
+        this.loading = true
+        this.error = null
+        const response = await axios.get(`${apiURL}/clients/zipcodes`)
+        this.chart3Labels = response.data.map(
+          (item) => `${item._id}`)
+          this.chartData3 = response.data.map(
+            (item) => `${item.count}`)
+      } catch (err) {
+        if (err.response) {
+          // client received an error response (5xx, 4xx)
+          this.error = {
+            title: 'Server Response',
+            message: err.message
+          }
+        } else if (err.request) {
+          // client never received a response, or request never left
+          this.error = {
+            title: 'Unable to Reach Server',
+            message: err.message
+          }
+        } else {
+          // There's probably an error in your code
+          this.error = {
+            title: 'Application Error',
+            message: err.message
+          }
+        }
+        this.loading = false
+      }
+
     },
     formattedDate(datetimeDB) {
       const dt = DateTime.fromISO(datetimeDB, {
@@ -114,7 +152,12 @@ export default {
             ></AttendanceChart>
             </div>
             <div>
-            <AttendanceChart2 />
+              <h1 class="font-bold text-2xl text-red-700 tracking-widest text-center mt-10">
+                Number of Clients by Zipcode</h1>
+            <Chart3 
+            v-if="!loading && !error"
+            :data="chartData3"
+            :labels="chart3Labels" />
             </div>
             <!-- Start of loading animation -->
             <div class="mt-40" v-if="loading">
