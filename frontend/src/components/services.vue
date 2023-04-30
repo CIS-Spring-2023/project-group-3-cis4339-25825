@@ -1,56 +1,57 @@
-<!-- To Do for Sprint 3: services transform into dynamic API call to backend-->
-<!-- Current services are stored in serviceData.json in assets - these are hard-coded-->
-
 <script>
-import ServiceData from '../assets/ServiceData.json' // import service data
-import { userLoggedIn } from '/store/userLogin.js' // import userLoggedIn function from store.js
+import { userLoggedIn } from '/store/userLogin.js' //DH: Import userLoggedIn function from store.js
+import axios from 'axios' //DH: Import axios
+const apiURL = import.meta.env.VITE_ROOT_API //DH: Set apiURL to root api
 
-export default { // export default to allow other pages to import this page
+export default { //DH: Export default to allow other pages to import this page
   data() { 
     return {
-      queryData: [],
-      // Parameter for search to occur
+      services: [], //DH: Create services array for all services
+      filteredServices: [], //DH: Create filteredServices array for filtered services
       searchBy: '',
       serviceName: '',
       serviceStatus: '',
       serviceDescription: '',
     }
   },
-  created() {
-    this.getServices() // get all services on page load
+  mounted() {
+    this.getServices() //DH: Get all services on page load
   },
   setup() {
     const store = userLoggedIn();
     return { store }
   },
   methods: {
-    handleSubmitForm() { 
+    handleSubmitForm() { //DH: Search services by name or description
+      let endpoint = ''
       if (this.searchBy === 'Service Name') { // if search by service name
-        this.$router.push({ name: 'updateservice'}) // search by service name
+        endpoint = `services/search/?name=${this.serviceName}&searchBy=name` // searching by service name
       }
-      else if (this.searchBy === 'Service Status') { // if search by service status
-        this.$router.push({ name: 'updateservice' }) // search by service status
+      else if (this.searchBy === 'Service Description') { // if searching by service description
+        endpoint=`services/search/?description=${this.serviceDescription}&searchBy=description` // search by service status
       }
+      axios.get(`${apiURL}/${endpoint}`).then((res) => { //DH: GET request sent to API
+        this.services = res.data //DH: Set services to response data
+      })
     },
-    // abstract get services call
+    //DH: GET all services from API
     getServices() {
-      this.queryData = ServiceData.currentServices // set queryData to service data
+      axios.get(`${apiURL}/services`).then((res) => {
+      this.services = res.data
+      })
+      window.scrollTo(0,0)
     },
     clearSearch() {
-      // Resets all the variables
+      // Resets all variables and gets all services
       this.searchBy = ''
       this.serviceName = ''
-      this.serviceStatus = ''
-
-
-      // get all entries
       this.getServices()
     },
-    editService() {
-      this.$router.push({ name: 'updateservice' }) // route to update service page
+    editService(serviceID) {
+      this.$router.push({ name: 'updateservice', params: { id: serviceID } }) // route to update service page
     },
     addService() {
-      this.$router.push({ name: 'serviceform' }) // route to create service page
+      this.$router.push({ name: 'serviceform' }) //DH: Route to create service page
     },
   }
 }
@@ -63,10 +64,11 @@ export default { // export default to allow other pages to import this page
       >
         Services
       </h1>
-      <div v-if="store.userType === 'editor'">
+      <div v-if="store.userType === 'editor'"> <!--DH: If user is editor, display add service button -->
       <div class="px-10 pt-20">
       <h2 class="text-2xl font-bold">Add a New Service</h2>
       <div class="text-center">
+      <!--DH: Add service button to route to add services form -->
       <button class="bg-red-700 text-white rounded"
             @click="addService"
             type="submit"> 
@@ -87,11 +89,13 @@ export default { // export default to allow other pages to import this page
             class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             v-model="searchBy"
           >
+            <!--DH: Determine parameter to search by-->
             <option value="Service Name">Service Name</option>
-            <option value="Service Status">Service Status</option>
+            <option value="Service Description">Service Description</option>
           </select>
         </div>
         <div class="flex flex-col" v-if="searchBy === 'Service Name'">
+          <!--DH: Search by service name-->
           <label class="block">
             <input
               type="text"
@@ -102,13 +106,14 @@ export default { // export default to allow other pages to import this page
             />
             </label>
         </div>
-        <div class="flex flex-col" v-if="searchBy === 'Service Status'">
+        <div class="flex flex-col" v-if="searchBy === 'Service Description'">
+          <!--DH: Search by service description-->
           <input
             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             type="text"
-            v-model="serviceStatus"
+            v-model="serviceDescription"
             v-on:keyup.enter="handleSubmitForm"
-            placeholder="Enter Service Status"
+            placeholder="Enter Service Descrpition"
           />
         </div>
         </div>
@@ -137,7 +142,7 @@ export default { // export default to allow other pages to import this page
     </div>
 
     <hr class="mt-10 mb-10" />
-    <!-- Display Found Data -->
+    <!--DH: Display Found Data -->
     <div
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
     >
@@ -150,24 +155,21 @@ export default { // export default to allow other pages to import this page
           <thead class="bg-gray-50 text-xl">
             <tr>
               <th class="p-4 text-left">Service Name</th>
-              <th class="p-4 text-left">Status</th>
               <th class="p-4 text-left">Description</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-300">
+            <tbody class="divide-y divide-gray-300">
+            <!--DH: If service is clicked, call editServices function with selected Object ID as param -->
             <tr
-              @click="editService(service.id)"
-              v-for="service in queryData"
-              :key="service.id"
+              @click="editService(service._id)"
+              v-for="service in services"
+              :key="service._id"
             >
-              <td class="p-2 text-left">
-                {{ service.name}} <!-- display service name -->
+              <td class="p-2 text-left" v-if="service.active === true">
+                {{ service.name }} <!--DH: Display service name if service is active -->
               </td>
-              <td class="p-2 text-left">
-                {{ service.status==1 ? 'Inactive' : 'Active'}} <!-- ternary operator to display status -->
-              </td>
-              <td class="p-2 text-left">
-                {{ service.description}} <!-- display service description -->
+              <td class="p-2 text-left" v-if="service.active === true">
+                {{ service.description}} <!--DH: Display service description if service is active -->
               </td>
             </tr>
           </tbody>

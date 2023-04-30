@@ -1,42 +1,42 @@
-<!-- To do for Sprint 3: make services dynamic -->
 <script>
-import { userLoggedIn } from '/store/userLogin.js' // import userLoggedIn function from store.js
+import { userLoggedIn } from '/store/userLogin.js' //DH: Import userLoggedIn function from store.js
+import axios from 'axios' // import axios
+const apiURL = import.meta.env.VITE_ROOT_API //Set apiURL to the api url from .env file
+
 export default {
+  props: ['id'], //DH: import object ID
   setup() {
-      const store = userLoggedIn(); // call userLoggedIn function
+      const store = userLoggedIn(); //DH: Call userLoggedIn function to define permissions for user
       return { store }
   },
   data() {return {
-      // Parameter for search to occur
-      searchBy: '',
-      service: { // service object
+      service: { //DH: Create service object default values
         name: '',
-        status: '',
-        description: '',
+        status: true,
+        description: ''
+      },
+    }
   },
-}
+  created() {
+    axios.get(`${apiURL}/services/id/${this.$route.params.id}`).then((res) => { //DH: Send GET request to API
+      this.service = res.data // DH: Set service object to response data
+    })
 },
   methods: {
-    serviceUpdate() {
+    async serviceUpdate() {
       if (this.store.userType === 'editor') {
-      alert('Service has been updated.') // alert user that service has been updated
-      this.$router.push({ name: 'services' }) // route to services page
-      }
+      axios.put(`${apiURL}/services/update/${this.$route.params.id}`, this.service).then((res) => { //DH: Send PUT request to API
+      })
+      .then(() => {
+      alert('Service has been updated.') //DH: Alert user that service has been updated
+      this.$router.push({ name: 'services' }) //DH: Route to services page
+      })
+    }
       else {
-        alert('You do not have permission to update a service.') // alert user that they do not have permission to update a service
-        this.$router.push({ name: 'services' }) // route to services page
+        alert('You do not have permission to update a service.') // DH: Alert user that they do not have permission to update a service
+        this.$router.push({ name: 'services' }) // DH: Route to services page
       }
     },
-    serviceDelete() {
-        if (this.store.userType === 'editor') {
-        alert('Event has been deleted.') // alert user that service has been deleted
-        this.$router.push({ name: 'services' }) // route to services page
-        }
-        else {
-          alert('You do not have permission to delete a service.') // alert user that they do not have permission to delete a service
-          this.$router.push({ name: 'services' }) // route to services page
-        }
-      },
 },
 }
 
@@ -51,7 +51,7 @@ export default {
       </h1>
     </div>
     <div class="px-10 py-20">
-      <form @submit.prevent="handleSubmitForm">
+      <form @submit.prevent="handleSubmitForm"> <!-- DH: Call handleSubmitForm on form submit -->
         <div
           class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
         >
@@ -60,6 +60,7 @@ export default {
         <br>
           <!-- form field -->
           <div class="flex flex-col">
+            <!-- DH: Service name field for selected service-->
             <label class="block">
               <span class="text-gray-700">Service Name</span>
               <span style="color: #ff0000">*</span>
@@ -73,6 +74,7 @@ export default {
           <br>
           <!-- form field -->
           <div class="flex flex-col">
+            <!-- DH: Description field for selected service-->
             <label class="block">
               <span class="text-gray-700">Service Description</span>
               <span style="color: #ff0000"></span>
@@ -82,15 +84,13 @@ export default {
                 v-model="service.description"
               />
             </label>
-          </div>
-          <br>
-          <!-- form field -->
-          <div class="flex flex-col">
-              <label class="block">
-              <span class="text-gray-700">Active Service Status? </span>
-              <input type="checkbox" id="status" v-model="service.status">
+            <br>
+              <label>
+              <span class="text-gray-700">Uncheck to Deactivate </span>
+              <input type="checkbox" id="status" v-model="service.active">
               </label>
           </div>
+          <br>
 
         <!-- grid container -->
         <!-- Service update and delete -->
@@ -98,8 +98,9 @@ export default {
           class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
         >
           <div class="flex justify-between mt-10 mr-20">
+            <!--DH: Call serviceUpdate defined above on button click -->
             <button
-              @click="serviceUpdate"
+              @click="serviceUpdate" 
               type="submit"
               class="bg-green-700 text-white rounded"
             >
@@ -107,13 +108,6 @@ export default {
             </button>
           </div>
           <div class="flex justify-between mt-10 mr-20">
-            <button
-              @click="serviceDelete"
-              type="submit"
-              class="bg-red-700 text-white rounded"
-            >
-              Delete Service
-            </button>
           </div>
           <div class="flex justify-between mt-10 mr-20">
             <button

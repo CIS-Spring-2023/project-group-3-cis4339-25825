@@ -4,7 +4,6 @@ import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import axios from 'axios'
 import { DateTime } from 'luxon'
-import ServiceData from '../assets/ServiceData.json' // import service data
 import { userLoggedIn } from '/store/userLogin.js' // import userLoggedIn function from store.js
 const apiURL = import.meta.env.VITE_ROOT_API
 
@@ -83,8 +82,11 @@ export default {
       alert('You do not have permission to delete this event.')
     }
     },
-    getServices() {
-      this.servicesAvail = ServiceData.currentServices // set queryData to service data
+    getServices() { //DH -  gets the services available by calling the api
+      axios.get(`${apiURL}/services`).then((res) => {
+        this.servicesAvail = res.data // sets the services available to the response data
+      })
+      window.scrollTo(0, 0) // scrolls to top of page
     },
   },
   // sets validations for the various data properties
@@ -179,12 +181,10 @@ export default {
           <div class="flex flex-col grid-cols-3">
             <label>Services Offered at Event</label>
             <div v-for="service in servicesAvail" > <!--list each item in service array-->
-              <p v-if="service.activeStatus == true" > <!-- but only if true-->
               <input :id="service.name" type="checkbox" v-model="event.services" :value="service.name"
               class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
               notchecked/>  <!-- checkbox that sends data to services information in Event instance-->
               <label :for="service.name">{{service.name}}</label> <!--label for each checkbox-->
-              </p>
           </div>
           </div>
         </div>

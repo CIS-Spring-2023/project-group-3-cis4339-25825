@@ -1,9 +1,7 @@
-<!-- To do for Sprint 3 - make serviced dynamic -->
 <script>
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import axios from 'axios'
-import ServiceData from '../assets/ServiceData.json' // import service data
 const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
@@ -29,7 +27,7 @@ export default {
     }
   },
   created() {
-    this.getServices() // get all services on page load
+    this.getServices() //DH: Get all services on page load
   },      
     methods: {
     async handleSubmitForm() {
@@ -49,7 +47,10 @@ export default {
       }
     },
     getServices() {
-      this.servicesAvail = ServiceData.currentServices // set queryData to service data
+      axios.get(`${apiURL}/services`).then((res) => {
+      this.servicesAvail = res.data
+      })
+      window.scrollTo(0,0)
     },      
   },
   // sets validations for the various data properties
@@ -143,15 +144,15 @@ export default {
           <div></div>
           <!-- form field -->
           <div class="flex flex-col grid-cols-3">
-            <label>Services Offered at Event</label> <!--Testing theory about how to populate these from a dataset. Current is local, need to make avail to services page-->
-            <div v-for="service in servicesAvail" > <!--list each item in service array-->
-              <p v-if="service.activeStatus == true" > <!-- but only if true-->
-              <input :id="service.name" type="checkbox" v-model="event.services" :value="service.name"
+            <label>Services Offered at Event</label>
+            <template v-for="service in servicesAvail"> <!--DH: List each item in service array-->
+            <div v-if="service.active === true"> <!--DH: Only show services that are active-->
+              <input  :id="service.name" type="checkbox" v-model="event.services" :value="service.name"
               class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-              notchecked/>  <!-- checkbox that sends data to services information in Event instance-->
-              <label :for="service.name">{{service.name}}</label> <!--label for each checkbox-->
-              </p>
+              notchecked/>  <!--DH: Checkbox that sends data to services information in Event instance-->
+              <label :for="service.name">{{service.name }}</label> <!--DH: Label for each checkbox-->
           </div>
+          </template>
           </div>
         </div>
 
@@ -222,8 +223,6 @@ export default {
             </label>
           </div>
         </div>
-
-
         <div class="flex justify-between mt-10 mr-20">
           <button class="bg-red-700 text-white rounded" type="submit">
             Add New Event
