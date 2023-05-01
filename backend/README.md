@@ -23,4 +23,4 @@ Setup a .env file with the following variables: MONGO_URL, PORT and ORG
 
 ## Postman Documentation
 
-Can be found at <DANI add here>
+Can be found at https://documenter.getpostman.com/view/19675468/2s93eU2EDp
