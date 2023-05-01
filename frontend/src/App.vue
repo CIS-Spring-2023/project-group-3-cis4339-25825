@@ -12,15 +12,22 @@ export default {
   },
   created() {
     axios.get(`${apiURL}/org`).then((res) => {
-      this.orgName = res.data.name
+      if (res.data) {
+        this.orgName = res.data.name
+      } else {
+        console.log('No data returned from API')
+      }
+    }).catch((error) => {
+      console.log(error)
     })
   },
   setup() {
     const store = userLoggedIn();
     return { store }
   }
-};
+}
 </script>
+
 <template>
   <main class="flex flex-row">
     <div id="_container" class="h-screen">

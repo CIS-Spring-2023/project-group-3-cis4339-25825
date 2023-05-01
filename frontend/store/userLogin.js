@@ -1,53 +1,65 @@
-import { defineStore } from 'pinia' // import defineStore from 'pinia'
-export const userLoggedIn = defineStore({ // create user login state
-    id: 'loggedIn',
-    state: () => {
-        return {
-            name: '',
-            isLoggedIn: false,
-            userType: ''
-        }
-    },
-    actions: {
-        async login(username, password) { // login action
-            try {
-                const response = await fauxApi(username, password)
-                this.$patch({
-                    isLoggedIn: response.isPermitted,
-                    name: response.name,
-                    userType: response.userType
-            })
-            this.$router.push("/");
-            } catch (error) {
-                console.log(error)
-            }
-        },
-        async logout() { // logout action
-            this.$patch({
-                name: '',
-                isLoggedIn: false,
-                userType: ''
-            })
-            this.$router.push("/");
-        }
-    }
-})
+import { defineStore } from 'pinia'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
 
-function fauxApi(username, password) { // fake api to emulate login credentials and response
-    if (username === 'Viewer' && password === 'viewer') { // if username and password match for viewer access
-        return Promise.resolve({
-            isPermitted: true,
-            name: 'viewer',
-            userType: 'viewer'
-        })
-    } else if (username === 'Editor' && password === 'editor') { // if username and password match for editor access
-            return Promise.resolve({
-                isPermitted: true,
-                name: 'editor',
-                userType: 'editor'
-            })
+export const userLoggedIn = defineStore({
+  id: 'loggedIn',
+  state: () => ({
+    name: '',
+    isLoggedIn: false,
+    userType: '',
+  }),
+  actions: {
+    async login(username, password) {
+      try {
+        const router = useRouter()
+        const response = await axios.post('/users/login', { username, password })
+
+        // Update the state based on the response from the backend
+        this.name = response.data.username
+        this.isLoggedIn = true
+        this.userType = response.data.role
+
+        // Store the access token in local storage
+        localStorage.setItem('accessToken', response.data.accessToken)
+
+        // Redirect the user to the home page
+        router.push('/')
+      } catch (error) {
+        if (error.response) {
+          console.log(error.response.data)
+          console.log(error.response.status)
+          console.log(error.response.headers)
+        } else if (error.request) {
+          console.log(error.request)
+        } else {
+          console.log('Error', error.message)
         }
-        else {
-            return Promise.reject(new Error ('Invalid credentials')) // if username and password do not match any credentials
-        }
+      }
+    },
+    async logout() {
+      const router = useRouter()
+      this.name = ''
+      this.isLoggedIn = false
+      this.userType = ''
+      localStorage.removeItem('accessToken')
+      router.push('/')
+    },
+    async createUser(username, password, role) {
+      try {
+        const response = await axios.post('/users', { username, password, role })
+        return response.data
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    async getUsers() {
+      try {
+        const response = await axios.get('/users')
+        return response.data
+      } catch (error) {
+        console.error(error)
+      }
     }
+  },
+})
