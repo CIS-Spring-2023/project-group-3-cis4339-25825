@@ -1,5 +1,5 @@
 <script>
-import { userLoggedIn } from '/store/userLogin.js' //DH: Import userLoggedIn function from store.js
+import { useLoggedInUser } from '/store/userLogin.js' //DH: Import userLoggedIn function from store.js
 import axios from 'axios' //DH: Import axios
 const apiURL = import.meta.env.VITE_ROOT_API //DH: Set apiURL to root api
 
@@ -18,7 +18,7 @@ export default { //DH: Export default to allow other pages to import this page
     this.getServices() //DH: Get all services on page load
   },
   setup() {
-    const store = userLoggedIn();
+    const store = useLoggedInUser();
     return { store }
   },
   methods: {

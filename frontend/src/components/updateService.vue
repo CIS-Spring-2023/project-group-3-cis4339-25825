@@ -1,12 +1,12 @@
 <script>
-import { userLoggedIn } from '/store/userLogin.js' //DH: Import userLoggedIn function from store.js
+import { useLoggedInUser } from '/store/userLogin.js' //DH: Import useLoggedInUser function from store.js
 import axios from 'axios' // import axios
 const apiURL = import.meta.env.VITE_ROOT_API //Set apiURL to the api url from .env file
 
 export default {
   props: ['id'], //DH: import object ID
   setup() {
-      const store = userLoggedIn(); //DH: Call userLoggedIn function to define permissions for user
+      const store = useLoggedInUser(); //DH: Call useLoggedInUser function to define permissions for user
       return { store }
   },
   data() {return {

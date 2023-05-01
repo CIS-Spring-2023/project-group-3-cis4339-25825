@@ -4,14 +4,14 @@ import { required, email, alpha, numeric } from '@vuelidate/validators'
 import VueMultiselect from 'vue-multiselect'
 import axios from 'axios'
 import { DateTime } from 'luxon'
-import { userLoggedIn } from '../../store/userLogin'
+import { useLoggedInUser } from '../../store/userLogin'
 const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
   props: ['id'],
   components: { VueMultiselect },
   setup() {
-    const store = userLoggedIn();
+    const store = useLoggedInUser();
     return { v$: useVuelidate({ $autoDirty: true }), store }
   },
   data() {
