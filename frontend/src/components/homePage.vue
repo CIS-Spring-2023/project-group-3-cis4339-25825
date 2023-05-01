@@ -91,6 +91,7 @@ export default {
           }
         }
         this.loading = false
+        this.forceRender()
       }
 
     },
@@ -105,6 +106,9 @@ export default {
     // method to allow click through table to event details
     editEvent(eventID) {
       this.$router.push({ name: 'eventdetails', params: { id: eventID } })
+    },
+    forceRender() {
+      this.componentKey += 1
     }
   }
 }
@@ -153,7 +157,8 @@ export default {
             </div>
             <div>
             <Chart3 
-            v-if="!loading && !error"
+            v-if="!loading && !error && chartData3.length > 0" 
+            :key="componentKey"
             :data="chartData3"
             :labels="chart3Labels" />
             </div>
