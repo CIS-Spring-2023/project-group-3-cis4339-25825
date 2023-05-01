@@ -170,7 +170,7 @@ const userDataSchema = new Schema(
     },
   },
   {
-    collection: 'user'
+    collection: 'users'
   }
 )
 
