@@ -1,26 +1,33 @@
 <script>
 import axios from 'axios'
-import { userLoggedIn } from '../store/userLogin.js'
+import { useLoggedInUser} from '../store/userLogin.js'
 const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
   name: 'App',
   data() {
     return {
-      orgName: 'Dataplatform'
+      orgName: ''
     }
   },
   created() {
     axios.get(`${apiURL}/org`).then((res) => {
-      this.orgName = res.data.name
+      if (res.data) {
+        this.orgName = res.data.name
+      } else {
+        console.log('No data returned from API')
+      }
+    }).catch((error) => {
+      console.log(error)
     })
   },
   setup() {
-    const store = userLoggedIn();
+    const store = useLoggedInUser();
     return { store }
   }
-};
+}
 </script>
+
 <template>
   <main class="flex flex-row">
     <div id="_container" class="h-screen">
@@ -49,7 +56,7 @@ export default {
                 >Login
               </router-link>
             </li>
-            <li v-if="store.userType === 'editor'">
+            <li v-if="store.role === 'editor'">
               <router-link to="/intakeform">
                 <span
                   style="position: relative; top: 6px"
@@ -59,7 +66,7 @@ export default {
                 Client Intake Form
               </router-link>
             </li>
-            <li v-if="store.userType === 'editor'">
+            <li v-if="store.role === 'editor'">
               <router-link to="/eventform">
                 <span
                   style="position: relative; top: 6px"

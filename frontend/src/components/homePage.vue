@@ -152,8 +152,6 @@ export default {
             ></AttendanceChart>
             </div>
             <div>
-              <h1 class="font-bold text-2xl text-red-700 tracking-widest text-center mt-10">
-                Number of Clients by Zipcode</h1>
             <Chart3 
             v-if="!loading && !error"
             :data="chartData3"
