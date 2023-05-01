@@ -64,7 +64,7 @@ export default { //DH: Export default to allow other pages to import this page
       >
         Services
       </h1>
-      <div v-if="store.userType === 'editor'"> <!--DH: If user is editor, display add service button -->
+      <div v-if="store.role === 'editor'"> <!--DH: If user is editor, display add service button -->
       <div class="px-10 pt-20">
       <h2 class="text-2xl font-bold">Add a New Service</h2>
       <div class="text-center">

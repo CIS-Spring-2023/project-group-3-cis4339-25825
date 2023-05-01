@@ -78,7 +78,7 @@ export default {
       // Checks to see if there are any errors in validation
       const isFormCorrect = await this.v$.$validate()
       // If no errors found. isFormCorrect = True then the form is submitted
-      if ((isFormCorrect) && (this.store.userType === 'editor')) { // checks form correctness & usertype
+      if ((isFormCorrect) && (this.store.role === 'editor')) { // checks form correctness & role
  {
         axios
           .put(`${apiURL}/clients/update/${this.id}`, this.client)
@@ -89,11 +89,11 @@ export default {
       }
     }
       else {
-        alert('You do not have permission to edit clients.') // if usertype is not editor
+        alert('You do not have permission to edit clients.') // if role is not editor
       }
     },
     addToEvent() {
-      if (this.store.userType === 'editor') { // checks usertype
+      if (this.store.role === 'editor') { // checks role
       this.eventsSelected.forEach((event) => {
         axios
           .put(`${apiURL}/events/register`, null, {
@@ -110,14 +110,14 @@ export default {
       this.eventsSelected = []
     }
     else {
-      alert('You do not have permission to add a client to events.') // if usertype is not editor
+      alert('You do not have permission to add a client to events.') // if role is not editor
     }
   },
     // replaces client hard delete
     // find all events where client appears in attendees array and pull it
     // then pull org from client org array
     deregisterClient() {
-      if (this.store.userType === 'editor') { // checks usertype
+      if (this.store.role === 'editor') { // checks role
       axios
         .get(`${apiURL}/events/client/${this.id}`)
         .then((res) => {
@@ -135,7 +135,7 @@ export default {
         )
       }
       else {
-        alert('You do not have permission to deactivate a client.') // if usertype is not editor
+        alert('You do not have permission to deactivate a client.') // if role is not editor
       }
     },
     // unused hard delete method

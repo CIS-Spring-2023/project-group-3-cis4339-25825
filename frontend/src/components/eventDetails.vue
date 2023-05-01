@@ -58,7 +58,7 @@ export default {
         .toISODate()
     },
     handleEventUpdate() {
-      if (this.store.userType === 'editor') {
+      if (this.store.role === 'editor') {
       axios.put(`${apiURL}/events/update/${this.id}`, this.event).then(() => {
         alert('Update has been saved.')
         this.$router.back()
@@ -72,7 +72,7 @@ export default {
       this.$router.push({ name: 'updateclient', params: { id: clientID } })
         },
     eventDelete() {
-      if (this.store.userType === 'editor') {
+      if (this.store.role === 'editor') {
       axios.delete(`${apiURL}/events/${this.id}`).then(() => {
         alert('Event has been deleted.')
         this.$router.push({ name: 'findevents' })

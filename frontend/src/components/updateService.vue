@@ -24,7 +24,7 @@ export default {
 },
   methods: {
     async serviceUpdate() {
-      if (this.store.userType === 'editor') {
+      if (this.store.role === 'editor') {
       axios.put(`${apiURL}/services/update/${this.$route.params.id}`, this.service).then((res) => { //DH: Send PUT request to API
       })
       .then(() => {

@@ -34,7 +34,7 @@
         return {
           username: '',
           password: '',
-          userType: '',
+          role: '',
         };
       },
       setup() {
