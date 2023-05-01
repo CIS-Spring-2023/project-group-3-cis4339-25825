@@ -4,13 +4,13 @@ import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import axios from 'axios'
 import { DateTime } from 'luxon'
-import { userLoggedIn } from '/store/userLogin.js' // import userLoggedIn function from store.js
+import { useLoggedInUser } from '/store/userLogin.js' // import useLoggedInUser function from store.js
 const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
   props: ['id'],
   setup() {
-    const store = userLoggedIn();
+    const store = useLoggedInUser();
     return { v$: useVuelidate({ $autoDirty: true }), store }
   },
   data() {
