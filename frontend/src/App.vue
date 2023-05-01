@@ -1,6 +1,6 @@
 <script>
 import axios from 'axios'
-import { userLoggedIn } from '../store/userLogin.js'
+import { useLoggedInUser} from '../store/userLogin.js'
 const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
@@ -22,7 +22,7 @@ export default {
     })
   },
   setup() {
-    const store = userLoggedIn();
+    const store = useLoggedInUser();
     return { store }
   }
 }
@@ -56,7 +56,7 @@ export default {
                 >Login
               </router-link>
             </li>
-            <li v-if="store.userType === 'editor'">
+            <li v-if="store.role === 'editor'">
               <router-link to="/intakeform">
                 <span
                   style="position: relative; top: 6px"
@@ -66,7 +66,7 @@ export default {
                 Client Intake Form
               </router-link>
             </li>
-            <li v-if="store.userType === 'editor'">
+            <li v-if="store.role === 'editor'">
               <router-link to="/eventform">
                 <span
                   style="position: relative; top: 6px"

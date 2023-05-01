@@ -160,19 +160,19 @@ const userDataSchema = new Schema(
       type: String,
       required: true
     },
-    hashedPassword: {
-      type: String, required: true
+    password: {
+      type: String,
+      required: true
     },
     role: {
-      type: String, required: true
-    }
+      type: String,
+      required: true
+    },
   },
   {
     collection: 'users'
   }
 )
-
-
 
 // create models from mongoose schemas
 const clients = mongoose.model('client', clientDataSchema)

@@ -13,7 +13,7 @@ router.post('/login', async (req, res, next) => {
     if (!user) {
       return res.status(401).json({ message: 'Invalid username or password' });
     }
-    const isMatch = await bcrypt.compare(password, user.hashedPassword); 
+    const isMatch = await bcrypt.compare(password, user.password); 
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid username or password' });
     }
@@ -30,7 +30,7 @@ router.post('/', async (req, res, next) => {
   try {
     const { username, password, role } = req.body;
     const hashedPassword = await bcrypt.hash(password, salt);
-    const user = new users({ username, hashedPassword, role });
+    const user = new users({ username, password, role });
     await user.save();
     res.status(201).send(user);
   } catch (err) {

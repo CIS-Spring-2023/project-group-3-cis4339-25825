@@ -1,65 +1,48 @@
 import { defineStore } from 'pinia'
-import { useRouter } from 'vue-router'
 import axios from 'axios'
 
-export const userLoggedIn = defineStore({
-  id: 'loggedIn',
+const apiURL = import.meta.env.VITE_ROOT_API
+
+export const useLoggedInUser = defineStore({
+  id: 'loggedInUser',
   state: () => ({
     name: '',
+    role: 0,
     isLoggedIn: false,
-    userType: '',
   }),
   actions: {
     async login(username, password) {
       try {
-        const router = useRouter()
-        const response = await axios.post('/users/login', { username, password })
-
-        // Update the state based on the response from the backend
-        this.name = response.data.username
-        this.isLoggedIn = true
-        this.userType = response.data.role
-
-        // Store the access token in local storage
-        localStorage.setItem('accessToken', response.data.accessToken)
-
-        // Redirect the user to the home page
-        router.push('/')
+        console.log(username, password);
+        const response = await axios.post(`${apiURL}/users/login`, {
+          username: username,
+          password: password,
+        });
+        console.log(response);
+        if (response && response.data) {
+          this.name = response.data.username;
+          this.role = response.data.role;
+          this.isLoggedIn = true;
+          console.log(response);
+          this.$router.push('/');
+        }
       } catch (error) {
-        if (error.response) {
-          console.log(error.response.data)
-          console.log(error.response.status)
-          console.log(error.response.headers)
-        } else if (error.request) {
-          console.log(error.request)
+        console.log(error);
+        if (error.response && error.response.status === 500) {
+          alert('Internal server error. Please try again later.');
         } else {
-          console.log('Error', error.message)
+          alert('Invalid credentials. Please try again.');
         }
       }
     },
-    async logout() {
-      const router = useRouter()
-      this.name = ''
-      this.isLoggedIn = false
-      this.userType = ''
-      localStorage.removeItem('accessToken')
-      router.push('/')
+    logout() {
+      this.name = '';
+      this.role = 0;
+      this.isLoggedIn = false;
+      this.$router.push('/login');
     },
-    async createUser(username, password, role) {
-      try {
-        const response = await axios.post('/users', { username, password, role })
-        return response.data
-      } catch (error) {
-        console.error(error)
-      }
-    },
-    async getUsers() {
-      try {
-        const response = await axios.get('/users')
-        return response.data
-      } catch (error) {
-        console.error(error)
-      }
-    }
   },
-})
+});
+
+
+
